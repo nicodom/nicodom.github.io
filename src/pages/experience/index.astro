@@ -1,0 +1,116 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const jobs = (await getCollection('experience')).sort(
+	(a, b) => b.data.startDate.valueOf() - a.data.startDate.valueOf()
+);
+const rendered = await Promise.all(jobs.map((job) => render(job)));
+
+const techCategories: [string, string[]][] = [
+	['Platforms', ['Web', 'iOS', 'Android']],
+	['Cloud & Infrastructure', ['AWS', 'Kubernetes (K8s)', 'ArgoCD', 'Helm', 'Serverless', 'AWS Step Functions', 'AWS Lambda']],
+	['Architecture', ['Microservices', 'Event-Driven Architecture (EDA)', 'CQRS', 'Event Sourcing', 'Data Mesh']],
+	['Streaming & Messaging', ['Kafka', 'Kafka Streams', 'Kafka Connect', 'Kafka Mirror Maker', 'KSQL', 'Flink', 'Confluent', 'CDC (Debezium)']],
+	['Languages', ['Python', 'Scala', 'Java', 'Kotlin', 'Node.js', 'PHP', 'Ruby']],
+	['Databases & Storage', ['DynamoDB', 'PostgreSQL', 'MySQL', 'Oracle', 'MongoDB', 'Cassandra', 'Redshift', 'Snowflake', 'Iceberg']],
+	['Search', ['Elasticsearch', 'Algolia']],
+	['API', ['GraphQL', 'REST']],
+	['Observability & Feature Management', ['Datadog', 'Eppo', 'LaunchDarkly']],
+	['Identity & Security', ['Okta/Auth0', 'Castle', 'hCaptcha']],
+	['iPaaS', ['Fivetran', 'Patchworks']],
+	['3rd Party Integrations', ['Stripe', 'Braintree', 'Twilio (Communication, Flex)', 'Segment', 'Sendgrid', 'Iterable', 'Tealium', 'Seel', 'Looker', 'SAP ByD']],
+];
+
+function formatDate(date: Date) {
+	return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+}
+---
+
+<BaseLayout title="Experience | Domenico Fioravanti" description="Professional experience and technology skills.">
+	<h1>Experience</h1>
+
+	<section>
+		<h2>Technology</h2>
+		<dl class="tech-grid">
+			{techCategories.map(([category, items]) => (
+				<>
+					<dt>{category}</dt>
+					<dd>{items.join(', ')}</dd>
+				</>
+			))}
+		</dl>
+	</section>
+
+	<section>
+		<h2>Professional Experience</h2>
+		<ul class="job-list">
+			{jobs.map((job, i) => {
+				const { Content } = rendered[i];
+				return (
+					<li>
+						<h3>{job.data.role}</h3>
+						<p class="company">
+							{job.data.company}
+							{job.data.location && <> — {job.data.location}</>}
+						</p>
+						<p class="meta">
+							{formatDate(job.data.startDate)} – {job.data.endDate ? formatDate(job.data.endDate) : 'Present'}
+						</p>
+						<div class="body">
+							<Content />
+						</div>
+						{job.data.techStack && (
+							<p class="tech"><strong>Tech Stack:</strong> {job.data.techStack.join(', ')}</p>
+						)}
+					</li>
+				);
+			})}
+		</ul>
+	</section>
+</BaseLayout>
+
+<style>
+	.tech-grid {
+		display: grid;
+		grid-template-columns: minmax(0, 220px) 1fr;
+		gap: 0.5rem 1.5rem;
+		font-size: 0.95rem;
+	}
+	.tech-grid dt {
+		font-weight: 600;
+	}
+	.tech-grid dd {
+		margin: 0 0 0.75rem;
+		color: var(--muted);
+	}
+	.job-list {
+		list-style: none;
+		padding: 0;
+	}
+	.job-list > li {
+		padding-bottom: 2rem;
+		margin-bottom: 2rem;
+		border-bottom: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+	}
+	.job-list h3 {
+		margin-bottom: 0.15rem;
+	}
+	.company {
+		margin: 0;
+		font-weight: 500;
+	}
+	.meta {
+		color: var(--muted);
+		font-size: 0.9rem;
+		margin-top: 0.15rem;
+	}
+	.body :global(p),
+	.body :global(ul) {
+		font-size: 0.97rem;
+	}
+	.tech {
+		font-size: 0.9rem;
+		color: var(--muted);
+	}
+</style>

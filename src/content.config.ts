@@ -15,6 +15,19 @@ const speaking = defineCollection({
   }),
 });
 
+const experience = defineCollection({
+  loader: glob({ pattern: '**/[^_]*.md', base: './src/content/experience' }),
+  schema: z.object({
+    company: z.string(),
+    role: z.string(),
+    location: z.string().optional(),
+    startDate: z.date(),
+    endDate: z.date().optional(),
+    summary: z.string().optional(),
+    techStack: z.array(z.string()).optional(),
+  }),
+});
+
 const community = defineCollection({
   loader: glob({ pattern: '**/[^_]*.md', base: './src/content/community' }),
   schema: z.object({
@@ -28,4 +41,4 @@ const community = defineCollection({
   }),
 });
 
-export const collections = { speaking, community };
+export const collections = { experience, speaking, community };
