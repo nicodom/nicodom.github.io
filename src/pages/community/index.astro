@@ -1,0 +1,51 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const activities = (await getCollection('community')).sort(
+	(a, b) => b.data.startDate.valueOf() - a.data.startDate.valueOf()
+);
+---
+
+<BaseLayout title="Community | Your Name" description="Community organizing activity.">
+	<h1>Community</h1>
+	{activities.length === 0 && <p>Community activity coming soon.</p>}
+	<ul class="activity-list">
+		{activities.map((activity) => (
+			<li>
+				<h2>{activity.data.title}</h2>
+				<p class="meta">
+					{activity.data.organization}
+					{activity.data.role && <> &middot; {activity.data.role}</>}
+					&middot; {activity.data.startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
+					{' – '}
+					{activity.data.endDate
+						? activity.data.endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' })
+						: 'Present'}
+				</p>
+				{activity.data.summary && <p>{activity.data.summary}</p>}
+				{activity.data.url && <p><a href={activity.data.url}>Learn more</a></p>}
+			</li>
+		))}
+	</ul>
+</BaseLayout>
+
+<style>
+	.activity-list {
+		list-style: none;
+		padding: 0;
+	}
+	.activity-list li {
+		padding-bottom: 1.75rem;
+		margin-bottom: 1.75rem;
+		border-bottom: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+	}
+	.activity-list h2 {
+		margin-bottom: 0.25rem;
+	}
+	.meta {
+		color: var(--muted);
+		font-size: 0.9rem;
+		margin-top: 0;
+	}
+</style>

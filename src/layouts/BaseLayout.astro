@@ -1,0 +1,116 @@
+---
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const { title, description = 'Personal portfolio and resume site.' } = Astro.props;
+const nav = [
+	{ href: '/', label: 'Home' },
+	{ href: '/speaking/', label: 'Speaking' },
+	{ href: '/community/', label: 'Community' },
+	{ href: '/contact/', label: 'Contact' },
+];
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="description" content={description} />
+		<title>{title}</title>
+	</head>
+	<body>
+		<header class="site-header">
+			<a class="brand" href="/">Your Name</a>
+			<nav>
+				<ul>
+					{nav.map((item) => (
+						<li><a href={item.href}>{item.label}</a></li>
+					))}
+				</ul>
+			</nav>
+		</header>
+		<main>
+			<slot />
+		</main>
+		<footer class="site-footer">
+			<p>&copy; {new Date().getFullYear()} Your Name</p>
+		</footer>
+	</body>
+</html>
+
+<style is:global>
+	:root {
+		color-scheme: light dark;
+		--max-width: 720px;
+		--fg: #1a1a1a;
+		--bg: #ffffff;
+		--muted: #666;
+		--accent: #3454d1;
+	}
+	@media (prefers-color-scheme: dark) {
+		:root {
+			--fg: #f0f0f0;
+			--bg: #121212;
+			--muted: #aaa;
+			--accent: #7c9bff;
+		}
+	}
+	* {
+		box-sizing: border-box;
+	}
+	body {
+		margin: 0;
+		font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+		color: var(--fg);
+		background: var(--bg);
+		line-height: 1.6;
+	}
+	main {
+		max-width: var(--max-width);
+		margin: 0 auto;
+		padding: 2rem 1.5rem 4rem;
+	}
+	a {
+		color: var(--accent);
+	}
+	.site-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		max-width: var(--max-width);
+		margin: 0 auto;
+		padding: 1.5rem;
+		gap: 1rem;
+	}
+	.brand {
+		font-weight: 700;
+		text-decoration: none;
+		color: var(--fg);
+	}
+	.site-header nav ul {
+		display: flex;
+		gap: 1.25rem;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.site-header nav a {
+		text-decoration: none;
+		color: var(--fg);
+	}
+	.site-header nav a:hover {
+		color: var(--accent);
+	}
+	.site-footer {
+		max-width: var(--max-width);
+		margin: 0 auto;
+		padding: 1.5rem;
+		color: var(--muted);
+		font-size: 0.9rem;
+	}
+</style>

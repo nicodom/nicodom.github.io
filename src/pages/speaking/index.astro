@@ -1,0 +1,54 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const talks = (await getCollection('speaking')).sort(
+	(a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+
+<BaseLayout title="Speaking | Your Name" description="Conference talks and speaking engagements.">
+	<h1>Speaking</h1>
+	{talks.length === 0 && <p>Talks coming soon.</p>}
+	<ul class="talk-list">
+		{talks.map((talk) => (
+			<li>
+				<h2>{talk.data.title}</h2>
+				<p class="meta">
+					{talk.data.event}
+					{talk.data.location && <> &middot; {talk.data.location}</>}
+					&middot; {talk.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
+				</p>
+				{talk.data.summary && <p>{talk.data.summary}</p>}
+				<p class="links">
+					{talk.data.slidesUrl && <a href={talk.data.slidesUrl}>Slides</a>}
+					{talk.data.videoUrl && <a href={talk.data.videoUrl}>Video</a>}
+					{talk.data.eventUrl && <a href={talk.data.eventUrl}>Event</a>}
+				</p>
+			</li>
+		))}
+	</ul>
+</BaseLayout>
+
+<style>
+	.talk-list {
+		list-style: none;
+		padding: 0;
+	}
+	.talk-list li {
+		padding-bottom: 1.75rem;
+		margin-bottom: 1.75rem;
+		border-bottom: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+	}
+	.talk-list h2 {
+		margin-bottom: 0.25rem;
+	}
+	.meta {
+		color: var(--muted);
+		font-size: 0.9rem;
+		margin-top: 0;
+	}
+	.links a {
+		margin-right: 1rem;
+	}
+</style>
