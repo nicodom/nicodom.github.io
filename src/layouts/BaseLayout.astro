@@ -4,9 +4,10 @@ interface Props {
 	description?: string;
 }
 
-const { title, description = 'Personal portfolio and resume site.' } = Astro.props;
+const { title, description = 'Domenico Fioravanti — Senior Engineering Leader.' } = Astro.props;
 const nav = [
 	{ href: '/', label: 'Home' },
+	{ href: '/experience/', label: 'Experience' },
 	{ href: '/speaking/', label: 'Speaking' },
 	{ href: '/community/', label: 'Community' },
 	{ href: '/contact/', label: 'Contact' },
@@ -25,7 +26,7 @@ const nav = [
 	</head>
 	<body>
 		<header class="site-header">
-			<a class="brand" href="/">Your Name</a>
+			<a class="brand" href="/">Domenico Fioravanti</a>
 			<nav>
 				<ul>
 					{nav.map((item) => (
@@ -38,7 +39,7 @@ const nav = [
 			<slot />
 		</main>
 		<footer class="site-footer">
-			<p>&copy; {new Date().getFullYear()} Your Name</p>
+			<p>&copy; {new Date().getFullYear()} Domenico Fioravanti</p>
 		</footer>
 	</body>
 </html>

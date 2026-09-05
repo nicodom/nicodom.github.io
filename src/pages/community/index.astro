@@ -7,7 +7,7 @@ const activities = (await getCollection('community')).sort(
 );
 ---
 
-<BaseLayout title="Community | Your Name" description="Community organizing activity.">
+<BaseLayout title="Community | Domenico Fioravanti" description="Community organizing activity.">
 	<h1>Community</h1>
 	{activities.length === 0 && <p>Community activity coming soon.</p>}
 	<ul class="activity-list">

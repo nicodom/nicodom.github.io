@@ -1,26 +1,147 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const achievements = [
+	'Built engineering orgs from scratch to 45+ people',
+	'Led architecture transformation from data monolith to event-driven data mesh',
+	'Designed and delivered a multi-tenant, multi-country integration platform supporting real-time data ingestion and orchestration across IE, UK, and US markets',
+	'Accelerated delivery and improved platform reliability through a Team Topologies redesign',
+];
+
+const competencies = [
+	'Engineering Leadership & Org Design',
+	'Event-Driven Architecture & Data Mesh',
+	'Distributed Systems & Real-Time Pipelines',
+	'Data Capture, Ingestion & Integration Platforms',
+	'Observability & Operational Excellence',
+	'Team Topologies & Flow Optimisation',
+	'Hiring, Mentorship & Talent Development',
+	'Stakeholder & Exec Collaboration',
+	'Speaker and Community Organizer',
+];
+
+const languages = [
+	'Italian (native)',
+	'English (fluent)',
+	'French (intermediate)',
+	'German (intermediate/basic)',
+	'Spanish (basic)',
+];
 ---
 
-<BaseLayout title="Your Name">
-	<section>
-		<h1>Your Name</h1>
-		<p class="tagline">TODO: one-line role/tagline, e.g. "Software Engineer &amp; Conference Speaker"</p>
-		<p>
-			TODO: short bio paragraph, adapted from your LinkedIn "About" section or CV summary.
-		</p>
+<BaseLayout title="Domenico Fioravanti — Senior Engineering Leader">
+	<section class="hero">
+		<h1>Domenico Fioravanti</h1>
+		<p class="tagline">Senior Engineering Leader</p>
+		<p class="location">Dublin, Ireland</p>
 		<p>
 			<a href="/resume.pdf" download>Download resume (PDF)</a>
 		</p>
 	</section>
 
 	<section>
-		<h2>Experience</h2>
-		<p>TODO: work history, pulled from CV/LinkedIn.</p>
+		<h2>Profile</h2>
+		<p>
+			Engineering leader with 20+ years of experience building and scaling tech orgs across
+			Europe, US, and LATAM, and data-intensive platforms. I operate as a Sociotechnical
+			Architect, intentionally aligning team structures, ways of working, and platform
+			architecture to maximise flow, resilience, and business outcomes.
+		</p>
+		<p>
+			Specialist in event-driven architecture, real-time data pipelines, and integration
+			ecosystems, from Kafka-based streaming to third-party API and partner integrations.
+			Proven track record of building engineering organisations from zero to 45+ people,
+			leading complex platform modernisations, and driving scalable, high-reliability systems
+			across e-commerce, healthcare, and SaaS. Regular speaker and community organiser on
+			event streaming, data platforms, and engineering organisation design.
+		</p>
+	</section>
+
+	<section>
+		<h2>Key Achievements</h2>
+		<ul>
+			{achievements.map((item) => <li>{item}</li>)}
+		</ul>
+	</section>
+
+	<section>
+		<h2>Core Competencies</h2>
+		<ul class="chip-list">
+			{competencies.map((item) => <li>{item}</li>)}
+		</ul>
+	</section>
+
+	<section>
+		<h2>Explore</h2>
+		<ul class="link-list">
+			<li><a href="/experience/">Full professional experience →</a></li>
+			<li><a href="/speaking/">Speaking engagements →</a></li>
+			<li><a href="/community/">Community organizing →</a></li>
+		</ul>
+	</section>
+
+	<section>
+		<h2>Education</h2>
+		<ul class="plain-list">
+			<li>
+				<strong>MSc Computer Science / Software Engineering</strong> — University of Rome
+				"La Sapienza"
+			</li>
+			<li><strong>European Baccalaureate</strong> — European School Brussels I</li>
+		</ul>
+	</section>
+
+	<section>
+		<h2>Languages</h2>
+		<ul class="plain-list inline">
+			{languages.map((item) => <li>{item}</li>)}
+		</ul>
 	</section>
 
 	<section>
 		<h2>Elsewhere</h2>
-		<p>TODO: social/contact links — see <a href="/contact/">Contact</a> page.</p>
+		<p>See <a href="/contact/">Contact</a> for email, LinkedIn, and GitHub.</p>
 	</section>
 </BaseLayout>
+
+<style>
+	.hero h1 {
+		margin-bottom: 0.25rem;
+	}
+	.tagline {
+		font-size: 1.2rem;
+		margin: 0;
+	}
+	.location {
+		color: var(--muted);
+		margin-top: 0.25rem;
+	}
+	.chip-list,
+	.link-list,
+	.plain-list {
+		list-style: none;
+		padding: 0;
+	}
+	.chip-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+	.chip-list li {
+		border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+		border-radius: 999px;
+		padding: 0.3rem 0.8rem;
+		font-size: 0.9rem;
+	}
+	.link-list li {
+		margin-bottom: 0.5rem;
+	}
+	.plain-list li {
+		margin-bottom: 0.4rem;
+	}
+	.plain-list.inline {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem 1.5rem;
+	}
+</style>

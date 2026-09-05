@@ -7,7 +7,7 @@ const talks = (await getCollection('speaking')).sort(
 );
 ---
 
-<BaseLayout title="Speaking | Your Name" description="Conference talks and speaking engagements.">
+<BaseLayout title="Speaking | Domenico Fioravanti" description="Conference talks and speaking engagements.">
 	<h1>Speaking</h1>
 	{talks.length === 0 && <p>Talks coming soon.</p>}
 	<ul class="talk-list">
