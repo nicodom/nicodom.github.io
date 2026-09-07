@@ -1,35 +1,7 @@
 ---
-import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-const jobs = (await getCollection('experience')).sort(
-	(a, b) => b.data.startDate.valueOf() - a.data.startDate.valueOf()
-);
-const rendered = await Promise.all(jobs.map((job) => render(job)));
-
-const techCategories: [string, string[]][] = [
-	['Platforms', ['Web', 'iOS', 'Android']],
-	['Cloud & Infrastructure', ['AWS', 'Kubernetes (K8s)', 'ArgoCD', 'Helm', 'Serverless', 'AWS Step Functions', 'AWS Lambda']],
-	['Architecture', ['Microservices', 'Event-Driven Architecture (EDA)', 'CQRS', 'Event Sourcing', 'Data Mesh']],
-	['Streaming & Messaging', ['Kafka', 'Kafka Streams', 'Kafka Connect', 'Kafka Mirror Maker', 'KSQL', 'Flink', 'Confluent', 'CDC (Debezium)']],
-	['Languages', ['Python', 'Scala', 'Java', 'Kotlin', 'Node.js', 'PHP', 'Ruby']],
-	['Databases & Storage', ['DynamoDB', 'PostgreSQL', 'MySQL', 'Oracle', 'MongoDB', 'Cassandra', 'Redshift', 'Snowflake', 'Iceberg']],
-	['Search', ['Elasticsearch', 'Algolia']],
-	['API', ['GraphQL', 'REST']],
-	['Observability & Feature Management', ['Datadog', 'Eppo', 'LaunchDarkly']],
-	['Identity & Security', ['Okta/Auth0', 'Castle', 'hCaptcha']],
-	['iPaaS', ['Fivetran', 'Patchworks']],
-	['3rd Party Integrations', ['Stripe', 'Braintree', 'Twilio (Communication, Flex)', 'Segment', 'Sendgrid', 'Iterable', 'Tealium', 'Seel', 'Looker', 'SAP ByD']],
-];
-
-function formatDate(date: Date) {
-	return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
-}
-
-// Signal theme: exact copy/structure from the Claude Design mock — a
-// condensed 6-bucket stack matrix and a git-log-style timeline (recent
-// roles detailed, everything before 2018 condensed into one list).
-const signalStack: [string, string][] = [
+const stack: [string, string][] = [
 	['cloud & infra', 'AWS, Kubernetes, ArgoCD, Helm, Serverless, Step Functions, Lambda'],
 	['streaming & messaging', 'Kafka, Kafka Streams, Kafka Connect, KSQL, Flink, Confluent, CDC (Debezium)'],
 	['architecture', 'Microservices, EDA, CQRS, Event Sourcing, Data Mesh'],
@@ -38,7 +10,7 @@ const signalStack: [string, string][] = [
 	['identity, observability & ipaas', 'Datadog, Eppo, LaunchDarkly, Okta/Auth0, Fivetran, Patchworks'],
 ];
 
-const signalRoles = [
+const roles = [
 	{
 		title: 'Senior Director of Engineering',
 		current: true,
@@ -77,7 +49,7 @@ const signalRoles = [
 	},
 ];
 
-const signalEarlier = [
+const earlier = [
 	{ role: "Lead / Senior Lead Software Engineer — Gilt.com & Hudson's Bay Company", when: '2016-2018' },
 	{ role: 'Senior Software Developer — BIONIC Marketing Technology', when: '2016' },
 	{ role: 'Head of Operations & Senior J2EE Architect — Genius Bytes Software Solutions', when: '2011-2015' },
@@ -87,30 +59,16 @@ const signalEarlier = [
 ---
 
 <BaseLayout title="Experience | Domenico Fioravanti" description="Professional experience and technology skills.">
-	<h1>
-		<span class="default-hide">Experience</span>
-		<span class="signal-only">Twenty years of platforms &amp; people</span>
-	</h1>
-	<p class="tagline-lead signal-only block">
+	<h1>Twenty-five years of platforms &amp; people</h1>
+	<p class="tagline-lead">
 		From founding two software companies to leading distributed engineering organisations
 		across Europe, the US, and South America.
 	</p>
 
 	<section>
-		<span class="section-label default-hide">Technology</span>
-		<span class="section-label bracket-label signal-only block">stack --list</span>
-
-		<dl class="tech-grid default-hide">
-			{techCategories.map(([category, items]) => (
-				<>
-					<dt>{category}</dt>
-					<dd>{items.join(', ')}</dd>
-				</>
-			))}
-		</dl>
-
-		<div class="stack-grid signal-only grid">
-			{signalStack.map(([category, items]) => (
+		<span class="section-label bracket-label">stack --list</span>
+		<div class="stack-grid">
+			{stack.map(([category, items]) => (
 				<div class="stack-cell">
 					<span class="stack-label">{category}</span>
 					<span class="stack-desc">{items}</span>
@@ -120,39 +78,13 @@ const signalEarlier = [
 	</section>
 
 	<section>
-		<span class="section-label default-hide">Professional Experience</span>
-		<span class="section-label bracket-label signal-only block">git log --roles</span>
-
-		<ul class="entry-list default-hide">
-			{jobs.map((job, i) => {
-				const { Content } = rendered[i];
-				return (
-					<li>
-						<h3>{job.data.role}</h3>
-						<p class="company">
-							{job.data.company}
-							{job.data.location && <> — {job.data.location}</>}
-						</p>
-						<p class="meta">
-							{formatDate(job.data.startDate)} – {job.data.endDate ? formatDate(job.data.endDate) : 'Present'}
-						</p>
-						<div class="body">
-							<Content />
-						</div>
-						{job.data.techStack && (
-							<p class="tech"><strong>Tech Stack:</strong> {job.data.techStack.join(', ')}</p>
-						)}
-					</li>
-				);
-			})}
-		</ul>
-
-		<div class="timeline signal-only grid">
-			{signalRoles.map((role, i) => (
+		<span class="section-label bracket-label">git log --roles</span>
+		<div class="timeline">
+			{roles.map((role, i) => (
 				<>
 					<div class="timeline-marker">
 						<span class={`timeline-dot ${role.current ? 'timeline-dot--current' : ''}`}></span>
-						{i < signalRoles.length - 1 && <span class="timeline-line"></span>}
+						{i < roles.length - 1 && <span class="timeline-line"></span>}
 					</div>
 					<div class="timeline-content">
 						<div class="timeline-heading">
@@ -180,7 +112,7 @@ const signalEarlier = [
 				<p class="timeline-title" style="font-size:1.05rem;">Earlier career</p>
 				<p class="timeline-when">2000 → 2018</p>
 				<div class="earlier-list">
-					{signalEarlier.map((item) => (
+					{earlier.map((item) => (
 						<div class="earlier-row">
 							<span>{item.role}</span>
 							<span class="when">{item.when}</span>
@@ -191,20 +123,3 @@ const signalEarlier = [
 		</div>
 	</section>
 </BaseLayout>
-
-<style>
-	.tech-grid {
-		display: grid;
-		grid-template-columns: minmax(0, 220px) 1fr;
-		gap: 0.5rem 1.5rem;
-		font-size: 0.95rem;
-	}
-	.tech-grid dt {
-		font-weight: 600;
-		font-family: var(--font-display);
-	}
-	.tech-grid dd {
-		margin: 0 0 0.75rem;
-		color: var(--muted);
-	}
-</style>

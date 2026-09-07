@@ -3,10 +3,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { GITHUB_URL, LINKEDIN_URL } from '../lib/contact';
 
 const stats = [
-	{ value: '20+', signalValue: '20+', label: 'Years experience', signalLabel: 'years_experience' },
-	{ value: '45+', signalValue: '45+', label: 'Engineers led', signalLabel: 'engineers_led' },
-	{ value: '3', signalValue: '03', label: 'Continents', signalLabel: 'continents' },
-	{ value: 'Dublin', signalValue: 'DUB', label: 'Based in Ireland', signalLabel: 'based_in_ireland' },
+	{ value: '25+', label: 'years_experience' },
+	{ value: '45+', label: 'engineers_led' },
+	{ value: '03', label: 'continents' },
+	{ value: 'DUB', label: 'based_in_ireland' },
 ];
 
 const achievements = [
@@ -14,18 +14,6 @@ const achievements = [
 	'Led architecture transformation from data monolith to event-driven data mesh',
 	'Designed and delivered a multi-tenant, multi-country integration platform supporting real-time data ingestion and orchestration across IE, UK, and US markets',
 	'Accelerated delivery and improved platform reliability through a Team Topologies redesign',
-];
-
-const competencies = [
-	'Engineering Leadership & Org Design',
-	'Event-Driven Architecture & Data Mesh',
-	'Distributed Systems & Real-Time Pipelines',
-	'Data Capture, Ingestion & Integration Platforms',
-	'Observability & Operational Excellence',
-	'Team Topologies & Flow Optimisation',
-	'Hiring, Mentorship & Talent Development',
-	'Stakeholder & Exec Collaboration',
-	'Speaker and Community Organizer',
 ];
 
 const signalFlags = [
@@ -41,27 +29,9 @@ const signalFlags = [
 ];
 
 const explore = [
-	{
-		href: '/experience/',
-		kicker: '~/experience',
-		title: 'Experience',
-		signalTitle: 'Timeline & stack',
-		desc: 'Full role history and technology depth',
-	},
-	{
-		href: '/speaking/',
-		kicker: '~/speaking',
-		title: 'Speaking',
-		signalTitle: 'Talks & podcasts',
-		desc: 'Conference talks and guest appearances',
-	},
-	{
-		href: '/community/',
-		kicker: '~/community',
-		title: 'Community',
-		signalTitle: 'Organizing',
-		desc: 'Meetups and practitioner communities',
-	},
+	{ href: '/experience/', kicker: '~/experience', title: 'Timeline & stack', desc: 'Full role history and technology depth' },
+	{ href: '/speaking/', kicker: '~/speaking', title: 'Talks & podcasts', desc: 'Conference talks and guest appearances' },
+	{ href: '/community/', kicker: '~/community', title: 'Organizing', desc: 'Meetups and practitioner communities' },
 ];
 
 const languages = [
@@ -79,16 +49,10 @@ const languages = [
 		<h1>Domenico Fioravanti</h1>
 		<p class="tagline-lead">
 			<span class="prompt-marker">&gt;</span>
-			<span class="default-hide">I operate as a Sociotechnical Architect — aligning</span>
-			<span class="signal-only">Aligning</span>
-			team structures, ways of working, and platform architecture to maximise flow, resilience,
-			and business outcomes.<span class="cursor" aria-hidden="true"></span>
+			Aligning team structures, ways of working, and platform architecture to maximise flow,
+			resilience, and business outcomes.<span class="cursor" aria-hidden="true"></span>
 		</p>
 		<div class="cta-row">
-			<a class="btn-primary" href="/resume.pdf" download>
-				<span class="default-hide">Download résumé (PDF)</span>
-				<span class="signal-only">./download-resume.pdf</span>
-			</a>
 			<div class="social-inline">
 				<a href={LINKEDIN_URL}>LinkedIn</a>
 				<span aria-hidden="true">&middot;</span>
@@ -98,23 +62,17 @@ const languages = [
 		<div class="stats">
 			{stats.map((stat) => (
 				<div class="stat">
-					<span class="stat-value">
-						<span class="default-hide">{stat.value}</span>
-						<span class="signal-only">{stat.signalValue}</span>
-					</span>
-					<span class="stat-label">
-						<span class="default-hide">{stat.label}</span>
-						<span class="signal-only">{stat.signalLabel}</span>
-					</span>
+					<span class="stat-value">{stat.value}</span>
+					<span class="stat-label">{stat.label}</span>
 				</div>
 			))}
 		</div>
 	</section>
 
 	<section>
-		<span class="section-label section-heading">Profile</span>
+		<span class="section-label section-heading">profile</span>
 		<p>
-			Engineering leader with 20+ years of experience building and scaling tech orgs across
+			Engineering leader with 25+ years of experience building and scaling tech orgs across
 			Europe, US, and LATAM, and data-intensive platforms. I operate as a Sociotechnical
 			Architect, intentionally aligning team structures, ways of working, and platform
 			architecture to maximise flow, resilience, and business outcomes.
@@ -130,17 +88,11 @@ const languages = [
 	</section>
 
 	<section>
-		<span class="section-label section-heading">
-			<span class="default-hide">Key Achievements</span>
-			<span class="signal-only">achievements</span>
-		</span>
+		<span class="section-label section-heading">achievements</span>
 		<ol class="achievements">
-			{achievements.map((item, i) => (
+			{achievements.map((item) => (
 				<li>
-					<span class="idx">
-						<span class="default-hide">{String(i + 1).padStart(2, '0')}</span>
-						<span class="signal-only">ok</span>
-					</span>
+					<span class="idx">ok</span>
 					<span>{item}</span>
 				</li>
 			))}
@@ -148,14 +100,8 @@ const languages = [
 	</section>
 
 	<section>
-		<span class="section-label section-heading">
-			<span class="default-hide">Core Competencies</span>
-			<span class="signal-only">focus</span>
-		</span>
-		<ul class="chip-list chip-list--default">
-			{competencies.map((item) => <li>{item}</li>)}
-		</ul>
-		<ul class="chip-list chip-list--signal">
+		<span class="section-label section-heading">focus</span>
+		<ul class="chip-list">
 			{signalFlags.map((item) => <li>{item}</li>)}
 		</ul>
 	</section>
@@ -167,12 +113,8 @@ const languages = [
 				<li>
 					<a class="explore-card" href={item.href}>
 						<span class="explore-kicker">{item.kicker}</span>
-						<span class="explore-title">
-							<span class="default-hide">{item.title}</span>
-							<span class="signal-only">{item.signalTitle}</span>
-						</span>
+						<span class="explore-title">{item.title}</span>
 						<span class="explore-desc">{item.desc}</span>
-						<span class="explore-link">View {item.title.toLowerCase()} &nbsp;→</span>
 					</a>
 				</li>
 			))}
