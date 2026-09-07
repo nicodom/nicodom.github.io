@@ -10,7 +10,7 @@ const talks = (await getCollection('speaking')).sort(
 <BaseLayout title="Speaking | Domenico Fioravanti" description="Conference talks and speaking engagements.">
 	<h1>Speaking</h1>
 	{talks.length === 0 && <p>Talks coming soon.</p>}
-	<ul class="talk-list">
+	<ul class="entry-list">
 		{talks.map((talk) => (
 			<li>
 				<h2>{talk.data.title}</h2>
@@ -29,26 +29,3 @@ const talks = (await getCollection('speaking')).sort(
 		))}
 	</ul>
 </BaseLayout>
-
-<style>
-	.talk-list {
-		list-style: none;
-		padding: 0;
-	}
-	.talk-list li {
-		padding-bottom: 1.75rem;
-		margin-bottom: 1.75rem;
-		border-bottom: 1px solid color-mix(in srgb, currentColor 15%, transparent);
-	}
-	.talk-list h2 {
-		margin-bottom: 0.25rem;
-	}
-	.meta {
-		color: var(--muted);
-		font-size: 0.9rem;
-		margin-top: 0;
-	}
-	.links a {
-		margin-right: 1rem;
-	}
-</style>
