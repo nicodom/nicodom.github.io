@@ -1,5 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { GITHUB_URL, LINKEDIN_URL } from '../lib/contact';
+
+const stats = [
+	{ value: '20+', signalValue: '20+', label: 'Years experience', signalLabel: 'years_experience' },
+	{ value: '45+', signalValue: '45+', label: 'Engineers led', signalLabel: 'engineers_led' },
+	{ value: '3', signalValue: '03', label: 'Continents', signalLabel: 'continents' },
+	{ value: 'Dublin', signalValue: 'DUB', label: 'Based in Ireland', signalLabel: 'based_in_ireland' },
+];
 
 const achievements = [
 	'Built engineering orgs from scratch to 45+ people',
@@ -20,27 +28,91 @@ const competencies = [
 	'Speaker and Community Organizer',
 ];
 
+const signalFlags = [
+	'org-design',
+	'event-driven',
+	'data-mesh',
+	'distributed-systems',
+	'integration',
+	'observability',
+	'team-topologies',
+	'mentorship',
+	'public-speaking',
+];
+
+const explore = [
+	{
+		href: '/experience/',
+		kicker: '~/experience',
+		title: 'Experience',
+		signalTitle: 'Timeline & stack',
+		desc: 'Full role history and technology depth',
+	},
+	{
+		href: '/speaking/',
+		kicker: '~/speaking',
+		title: 'Speaking',
+		signalTitle: 'Talks & podcasts',
+		desc: 'Conference talks and guest appearances',
+	},
+	{
+		href: '/community/',
+		kicker: '~/community',
+		title: 'Community',
+		signalTitle: 'Organizing',
+		desc: 'Meetups and practitioner communities',
+	},
+];
+
 const languages = [
-	'Italian (native)',
-	'English (fluent)',
-	'French (intermediate)',
-	'German (intermediate/basic)',
-	'Spanish (basic)',
+	{ name: 'Italian', level: 'Native' },
+	{ name: 'English', level: 'Fluent' },
+	{ name: 'French', level: 'Intermediate' },
+	{ name: 'German', level: 'Basic' },
+	{ name: 'Spanish', level: 'Basic' },
 ];
 ---
 
 <BaseLayout title="Domenico Fioravanti — Senior Engineering Leader">
 	<section class="hero">
+		<span class="section-label">Senior Engineering Leader &middot; Sociotechnical Architect</span>
 		<h1>Domenico Fioravanti</h1>
-		<p class="tagline">Senior Engineering Leader</p>
-		<p class="location">Dublin, Ireland</p>
-		<p>
-			<a href="/resume.pdf" download>Download resume (PDF)</a>
+		<p class="tagline-lead">
+			<span class="prompt-marker">&gt;</span>
+			<span class="default-hide">I operate as a Sociotechnical Architect — aligning</span>
+			<span class="signal-only">Aligning</span>
+			team structures, ways of working, and platform architecture to maximise flow, resilience,
+			and business outcomes.<span class="cursor" aria-hidden="true"></span>
 		</p>
+		<div class="cta-row">
+			<a class="btn-primary" href="/resume.pdf" download>
+				<span class="default-hide">Download résumé (PDF)</span>
+				<span class="signal-only">./download-resume.pdf</span>
+			</a>
+			<div class="social-inline">
+				<a href={LINKEDIN_URL}>LinkedIn</a>
+				<span aria-hidden="true">&middot;</span>
+				<a href={GITHUB_URL}>GitHub</a>
+			</div>
+		</div>
+		<div class="stats">
+			{stats.map((stat) => (
+				<div class="stat">
+					<span class="stat-value">
+						<span class="default-hide">{stat.value}</span>
+						<span class="signal-only">{stat.signalValue}</span>
+					</span>
+					<span class="stat-label">
+						<span class="default-hide">{stat.label}</span>
+						<span class="signal-only">{stat.signalLabel}</span>
+					</span>
+				</div>
+			))}
+		</div>
 	</section>
 
 	<section>
-		<h2>Profile</h2>
+		<span class="section-label section-heading">Profile</span>
 		<p>
 			Engineering leader with 20+ years of experience building and scaling tech orgs across
 			Europe, US, and LATAM, and data-intensive platforms. I operate as a Sociotechnical
@@ -58,49 +130,76 @@ const languages = [
 	</section>
 
 	<section>
-		<h2>Key Achievements</h2>
-		<ul>
-			{achievements.map((item) => <li>{item}</li>)}
-		</ul>
+		<span class="section-label section-heading">
+			<span class="default-hide">Key Achievements</span>
+			<span class="signal-only">achievements</span>
+		</span>
+		<ol class="achievements">
+			{achievements.map((item, i) => (
+				<li>
+					<span class="idx">
+						<span class="default-hide">{String(i + 1).padStart(2, '0')}</span>
+						<span class="signal-only">ok</span>
+					</span>
+					<span>{item}</span>
+				</li>
+			))}
+		</ol>
 	</section>
 
 	<section>
-		<h2>Core Competencies</h2>
-		<ul class="chip-list">
+		<span class="section-label section-heading">
+			<span class="default-hide">Core Competencies</span>
+			<span class="signal-only">focus</span>
+		</span>
+		<ul class="chip-list chip-list--default">
 			{competencies.map((item) => <li>{item}</li>)}
 		</ul>
-	</section>
-
-	<section>
-		<h2>Explore</h2>
-		<ul class="link-list">
-			<li><a href="/experience/">Full professional experience →</a></li>
-			<li><a href="/speaking/">Speaking engagements →</a></li>
-			<li><a href="/community/">Community organizing →</a></li>
+		<ul class="chip-list chip-list--signal">
+			{signalFlags.map((item) => <li>{item}</li>)}
 		</ul>
 	</section>
 
 	<section>
-		<h2>Education</h2>
-		<ul class="plain-list">
-			<li>
-				<strong>MSc Computer Science / Software Engineering</strong> — University of Rome
-				"La Sapienza"
-			</li>
-			<li><strong>European Baccalaureate</strong> — European School Brussels I</li>
+		<span class="section-label section-heading">Explore</span>
+		<ul class="explore-grid">
+			{explore.map((item) => (
+				<li>
+					<a class="explore-card" href={item.href}>
+						<span class="explore-kicker">{item.kicker}</span>
+						<span class="explore-title">
+							<span class="default-hide">{item.title}</span>
+							<span class="signal-only">{item.signalTitle}</span>
+						</span>
+						<span class="explore-desc">{item.desc}</span>
+						<span class="explore-link">View {item.title.toLowerCase()} &nbsp;→</span>
+					</a>
+				</li>
+			))}
 		</ul>
 	</section>
 
 	<section>
-		<h2>Languages</h2>
-		<ul class="plain-list inline">
-			{languages.map((item) => <li>{item}</li>)}
-		</ul>
-	</section>
-
-	<section>
-		<h2>Elsewhere</h2>
-		<p>See <a href="/contact/">Contact</a> for email, LinkedIn, and GitHub.</p>
+		<div class="split-grid">
+			<div class="split-col">
+				<span class="section-label section-heading">Education</span>
+				<ul class="plain-list">
+					<li>
+						<strong>MSc Computer Science / Software Engineering</strong> — University of Rome
+						"La Sapienza"
+					</li>
+					<li><strong>European Baccalaureate</strong> — European School Brussels I</li>
+				</ul>
+			</div>
+			<div class="split-col">
+				<span class="section-label section-heading">Languages</span>
+				<ul class="plain-list inline">
+					{languages.map((lang) => (
+						<li>{lang.name} <span class="lang-level">{lang.level}</span></li>
+					))}
+				</ul>
+			</div>
+		</div>
 	</section>
 </BaseLayout>
 
@@ -108,40 +207,7 @@ const languages = [
 	.hero h1 {
 		margin-bottom: 0.25rem;
 	}
-	.tagline {
-		font-size: 1.2rem;
-		margin: 0;
-	}
-	.location {
-		color: var(--muted);
-		margin-top: 0.25rem;
-	}
-	.chip-list,
-	.link-list,
-	.plain-list {
-		list-style: none;
-		padding: 0;
-	}
-	.chip-list {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem;
-	}
-	.chip-list li {
-		border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
-		border-radius: 999px;
-		padding: 0.3rem 0.8rem;
-		font-size: 0.9rem;
-	}
-	.link-list li {
-		margin-bottom: 0.5rem;
-	}
-	.plain-list li {
-		margin-bottom: 0.4rem;
-	}
-	.plain-list.inline {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.4rem 1.5rem;
+	.explore-grid {
+		margin: 1rem 0 0;
 	}
 </style>

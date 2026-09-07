@@ -25,14 +25,82 @@ const techCategories: [string, string[]][] = [
 function formatDate(date: Date) {
 	return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
 }
+
+// Signal theme: exact copy/structure from the Claude Design mock — a
+// condensed 6-bucket stack matrix and a git-log-style timeline (recent
+// roles detailed, everything before 2018 condensed into one list).
+const signalStack: [string, string][] = [
+	['cloud & infra', 'AWS, Kubernetes, ArgoCD, Helm, Serverless, Step Functions, Lambda'],
+	['streaming & messaging', 'Kafka, Kafka Streams, Kafka Connect, KSQL, Flink, Confluent, CDC (Debezium)'],
+	['architecture', 'Microservices, EDA, CQRS, Event Sourcing, Data Mesh'],
+	['languages', 'Python, Scala, Java, Kotlin, Node.js, PHP, Ruby'],
+	['data & storage', 'DynamoDB, PostgreSQL, MySQL, Redshift, Snowflake, Iceberg'],
+	['identity, observability & ipaas', 'Datadog, Eppo, LaunchDarkly, Okta/Auth0, Fivetran, Patchworks'],
+];
+
+const signalRoles = [
+	{
+		title: 'Senior Director of Engineering',
+		current: true,
+		company: 'Rue Gilt Groupe',
+		location: 'Dublin, Ireland',
+		when: '2023-02 → present',
+		body: "Built Rue Gilt Groupe's Dublin office from zero. Today manage 20+ engineers across Europe, the US, and South America, leading a 3-year transformation from a data monolith to an event-driven Data Mesh (Kafka + Flink + Tableflow).",
+		tags: ['AWS', 'Kafka+Flink', 'Django', 'React', 'Snowflake'],
+	},
+	{
+		title: 'Director of Engineering',
+		current: false,
+		company: 'Thérapie Clinic',
+		location: 'Dublin, Ireland',
+		when: '2020-09 → 2023-01',
+		body: 'Hired by the CEO to build an internal tech organisation from zero. Grew it to 7 teams and 45 people in two years, spanning call centre, e-commerce, ERP, and data platforms.',
+		tags: ['K8s', 'Kafka Streams', 'Kotlin', 'React Native'],
+	},
+	{
+		title: 'Senior Engineering Manager',
+		current: false,
+		company: 'FabFitFun',
+		location: 'Dublin, Ireland',
+		when: '2020-01 → 2020-07',
+		body: 'Led two teams through the "strangler pattern" migration from a monolith to event-driven microservices, replacing an external API dependency in-house.',
+		tags: [],
+	},
+	{
+		title: 'Director of Engineering',
+		current: false,
+		company: "Hudson's Bay Company",
+		location: '',
+		when: '2018-11 → 2020-01',
+		body: 'Led 4 engineering teams through a monolith-to-microservices migration; planned resourcing for 30+ engineers during the move to Salesforce Commerce Cloud.',
+		tags: [],
+	},
+];
+
+const signalEarlier = [
+	{ role: "Lead / Senior Lead Software Engineer — Gilt.com & Hudson's Bay Company", when: '2016-2018' },
+	{ role: 'Senior Software Developer — BIONIC Marketing Technology', when: '2016' },
+	{ role: 'Head of Operations & Senior J2EE Architect — Genius Bytes Software Solutions', when: '2011-2015' },
+	{ role: 'Co-Owner, Project Manager & Architect — Digital Solutions S.r.l.', when: '2004-2011' },
+	{ role: 'Co-Founder — Brainwave S.r.l.  /  Research Fellow — La Sapienza', when: '2000-2003' },
+];
 ---
 
 <BaseLayout title="Experience | Domenico Fioravanti" description="Professional experience and technology skills.">
-	<h1>Experience</h1>
+	<h1>
+		<span class="default-hide">Experience</span>
+		<span class="signal-only">Twenty years of platforms &amp; people</span>
+	</h1>
+	<p class="tagline-lead signal-only block">
+		From founding two software companies to leading distributed engineering organisations
+		across Europe, the US, and South America.
+	</p>
 
 	<section>
-		<h2>Technology</h2>
-		<dl class="tech-grid">
+		<span class="section-label default-hide">Technology</span>
+		<span class="section-label bracket-label signal-only block">stack --list</span>
+
+		<dl class="tech-grid default-hide">
 			{techCategories.map(([category, items]) => (
 				<>
 					<dt>{category}</dt>
@@ -40,11 +108,22 @@ function formatDate(date: Date) {
 				</>
 			))}
 		</dl>
+
+		<div class="stack-grid signal-only grid">
+			{signalStack.map(([category, items]) => (
+				<div class="stack-cell">
+					<span class="stack-label">{category}</span>
+					<span class="stack-desc">{items}</span>
+				</div>
+			))}
+		</div>
 	</section>
 
 	<section>
-		<h2>Professional Experience</h2>
-		<ul class="job-list">
+		<span class="section-label default-hide">Professional Experience</span>
+		<span class="section-label bracket-label signal-only block">git log --roles</span>
+
+		<ul class="entry-list default-hide">
 			{jobs.map((job, i) => {
 				const { Content } = rendered[i];
 				return (
@@ -67,6 +146,49 @@ function formatDate(date: Date) {
 				);
 			})}
 		</ul>
+
+		<div class="timeline signal-only grid">
+			{signalRoles.map((role, i) => (
+				<>
+					<div class="timeline-marker">
+						<span class={`timeline-dot ${role.current ? 'timeline-dot--current' : ''}`}></span>
+						{i < signalRoles.length - 1 && <span class="timeline-line"></span>}
+					</div>
+					<div class="timeline-content">
+						<div class="timeline-heading">
+							<span class="timeline-title">{role.title}</span>
+							{role.current && <span class="head-badge">HEAD</span>}
+						</div>
+						<p class="timeline-company">
+							{role.company}
+							{role.location && <> &middot; {role.location}</>}
+						</p>
+						<p class="timeline-when">{role.when}</p>
+						<p class="timeline-body">{role.body}</p>
+						{role.tags.length > 0 && (
+							<div class="timeline-tags">
+								{role.tags.map((tag) => <span class="tag">{tag}</span>)}
+							</div>
+						)}
+					</div>
+				</>
+			))}
+			<div class="timeline-marker">
+				<span class="timeline-dot"></span>
+			</div>
+			<div class="timeline-content">
+				<p class="timeline-title" style="font-size:1.05rem;">Earlier career</p>
+				<p class="timeline-when">2000 → 2018</p>
+				<div class="earlier-list">
+					{signalEarlier.map((item) => (
+						<div class="earlier-row">
+							<span>{item.role}</span>
+							<span class="when">{item.when}</span>
+						</div>
+					))}
+				</div>
+			</div>
+		</div>
 	</section>
 </BaseLayout>
 
@@ -79,38 +201,10 @@ function formatDate(date: Date) {
 	}
 	.tech-grid dt {
 		font-weight: 600;
+		font-family: var(--font-display);
 	}
 	.tech-grid dd {
 		margin: 0 0 0.75rem;
-		color: var(--muted);
-	}
-	.job-list {
-		list-style: none;
-		padding: 0;
-	}
-	.job-list > li {
-		padding-bottom: 2rem;
-		margin-bottom: 2rem;
-		border-bottom: 1px solid color-mix(in srgb, currentColor 15%, transparent);
-	}
-	.job-list h3 {
-		margin-bottom: 0.15rem;
-	}
-	.company {
-		margin: 0;
-		font-weight: 500;
-	}
-	.meta {
-		color: var(--muted);
-		font-size: 0.9rem;
-		margin-top: 0.15rem;
-	}
-	.body :global(p),
-	.body :global(ul) {
-		font-size: 0.97rem;
-	}
-	.tech {
-		font-size: 0.9rem;
 		color: var(--muted);
 	}
 </style>
