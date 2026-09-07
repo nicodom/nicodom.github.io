@@ -1,4 +1,7 @@
 ---
+import '../styles/theme.css';
+import { GITHUB_URL, LINKEDIN_URL } from '../lib/contact';
+
 interface Props {
 	title: string;
 	description?: string;
@@ -12,6 +15,11 @@ const nav = [
 	{ href: '/community/', label: 'Community' },
 	{ href: '/contact/', label: 'Contact' },
 ];
+const themes = [
+	{ value: 'signal', label: 'Signal' },
+	{ value: 'editorial', label: 'Editorial' },
+	{ value: 'executive', label: 'Executive' },
+];
 ---
 
 <html lang="en">
@@ -23,95 +31,111 @@ const nav = [
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={description} />
 		<title>{title}</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Public+Sans:wght@400;500;600&family=Spectral:wght@400;500;600;700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500;600&display=swap"
+		/>
+		<script is:inline>
+			(function () {
+				var theme = 'signal';
+				var mode = null;
+				try {
+					theme = localStorage.getItem('theme') || 'signal';
+					mode = localStorage.getItem('mode');
+				} catch (e) {}
+				if (!mode) {
+					mode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+				}
+				document.documentElement.dataset.theme = theme;
+				document.documentElement.dataset.mode = mode;
+			})();
+		</script>
 	</head>
 	<body>
+		<div class="status-bar">
+			<span><span class="status-dot"></span>Open to new roles &middot; Dublin, IE</span>
+			<span>Sys.uptime: 20+ yrs</span>
+		</div>
 		<header class="site-header">
-			<a class="brand" href="/">Domenico Fioravanti</a>
+			<a class="brand" href="/">
+				<span class="default-hide">Domenico Fioravanti</span>
+				<span class="signal-only">domenico<span class="at">@</span>fioravanti</span>
+			</a>
 			<nav>
 				<ul>
 					{nav.map((item) => (
-						<li><a href={item.href}>{item.label}</a></li>
+						<li>
+							<a href={item.href} aria-current={Astro.url.pathname === item.href ? 'page' : undefined}>
+								{item.label}
+							</a>
+						</li>
 					))}
 				</ul>
+				<div class="theme-controls">
+					<select id="theme-select" class="theme-select" aria-label="Site theme">
+						{themes.map((theme) => (
+							<option value={theme.value}>{theme.label}</option>
+						))}
+					</select>
+					<button id="mode-toggle" class="mode-toggle" type="button" aria-label="Toggle light and dark mode">
+						&nbsp;
+					</button>
+				</div>
 			</nav>
 		</header>
 		<main>
 			<slot />
 		</main>
 		<footer class="site-footer">
-			<p>&copy; {new Date().getFullYear()} Domenico Fioravanti</p>
+			<p class="footer-copy">&copy; {new Date().getFullYear()} Domenico Fioravanti</p>
+			<div class="footer-links">
+				<a href={LINKEDIN_URL}>LinkedIn</a>
+				<a href={GITHUB_URL}>GitHub</a>
+			</div>
 		</footer>
+		<script is:inline>
+			(function () {
+				var select = document.getElementById('theme-select');
+				var modeToggle = document.getElementById('mode-toggle');
+				var root = document.documentElement;
+
+				function renderModeToggle() {
+					if (!modeToggle) return;
+					var isDark = root.dataset.mode === 'dark';
+					modeToggle.textContent = isDark ? '☀️ Light' : '🌙 Dark';
+					modeToggle.setAttribute('aria-pressed', String(isDark));
+				}
+
+				if (select) {
+					select.value = root.dataset.theme || 'signal';
+					select.addEventListener('change', function () {
+						root.dataset.theme = select.value;
+						try {
+							localStorage.setItem('theme', select.value);
+						} catch (e) {}
+					});
+				}
+
+				if (modeToggle) {
+					renderModeToggle();
+					modeToggle.addEventListener('click', function () {
+						var next = root.dataset.mode === 'dark' ? 'light' : 'dark';
+						root.dataset.mode = next;
+						try {
+							localStorage.setItem('mode', next);
+						} catch (e) {}
+						renderModeToggle();
+					});
+				}
+			})();
+		</script>
 	</body>
 </html>
 
 <style is:global>
 	:root {
-		color-scheme: light dark;
-		--max-width: 720px;
-		--fg: #1a1a1a;
-		--bg: #ffffff;
-		--muted: #666;
-		--accent: #3454d1;
-	}
-	@media (prefers-color-scheme: dark) {
-		:root {
-			--fg: #f0f0f0;
-			--bg: #121212;
-			--muted: #aaa;
-			--accent: #7c9bff;
-		}
-	}
-	* {
-		box-sizing: border-box;
-	}
-	body {
-		margin: 0;
-		font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-		color: var(--fg);
-		background: var(--bg);
-		line-height: 1.6;
-	}
-	main {
-		max-width: var(--max-width);
-		margin: 0 auto;
-		padding: 2rem 1.5rem 4rem;
-	}
-	a {
-		color: var(--accent);
-	}
-	.site-header {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		max-width: var(--max-width);
-		margin: 0 auto;
-		padding: 1.5rem;
-		gap: 1rem;
-	}
-	.brand {
-		font-weight: 700;
-		text-decoration: none;
-		color: var(--fg);
-	}
-	.site-header nav ul {
-		display: flex;
-		gap: 1.25rem;
-		list-style: none;
-		margin: 0;
-		padding: 0;
-	}
-	.site-header nav a {
-		text-decoration: none;
-		color: var(--fg);
-	}
-	.site-header nav a:hover {
-		color: var(--accent);
-	}
-	.site-footer {
-		max-width: var(--max-width);
-		margin: 0 auto;
-		padding: 1.5rem;
-		color: var(--muted);
-		font-size: 0.9rem;
+		--max-width: 760px;
 	}
 </style>
