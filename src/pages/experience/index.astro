@@ -8,12 +8,20 @@ const stack: [string, string][] = [
 	['languages', 'Python, Scala, Java, Kotlin, Node.js, PHP, Ruby'],
 	['data & storage', 'DynamoDB, PostgreSQL, MySQL, Redshift, Snowflake, Iceberg'],
 	['identity, observability & ipaas', 'Datadog, Eppo, LaunchDarkly, Okta/Auth0, Fivetran, Patchworks'],
-	['ai & agents', 'Claude Code, agentic AI governance, OWASP LLM06, Team Topologies for AI adoption'],
 ];
 
-// The stack matrix is a 2-column grid; the last visual row (the final 1 or
-// 2 cells, depending on whether the count is odd or even) shouldn't get a
-// bottom border so it doesn't double up against the grid's own border.
+// Rendered as its own full-width row at the end of the stack matrix (see
+// .stack-cell--full), rather than as a regular 2-column grid cell, so it
+// doesn't leave an empty cell beside it.
+const stackFull: [string, string] = [
+	'ai & agents',
+	'Claude Code, agentic AI governance, OWASP LLM06, Team Topologies for AI adoption',
+];
+
+// The stack matrix is a 2-column grid; the last visual row of the regular
+// (non-full-width) cells — the final 1 or 2, depending on odd/even count —
+// shouldn't get a bottom border so it doesn't double up against the full-
+// width row's own top edge.
 const stackLastRowStart = stack.length - (stack.length % 2 === 0 ? 2 : 1);
 
 const roles = [
@@ -80,6 +88,10 @@ const earlier = [
 					<span class="stack-desc">{items}</span>
 				</div>
 			))}
+			<div class="stack-cell stack-cell--full">
+				<span class="stack-label">{stackFull[0]}</span>
+				<span class="stack-desc">{stackFull[1]}</span>
+			</div>
 		</div>
 	</section>
 
