@@ -24,6 +24,7 @@ const talks = (await getCollection('speaking')).sort(
 					{talk.data.slidesUrl && <a href={talk.data.slidesUrl}>Slides</a>}
 					{talk.data.videoUrl && <a href={talk.data.videoUrl}>Video</a>}
 					{talk.data.eventUrl && <a href={talk.data.eventUrl}>Event</a>}
+					{talk.data.photosUrl && <a href={talk.data.photosUrl}>Photos</a>}
 				</p>
 			</li>
 		))}
