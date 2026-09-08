@@ -18,10 +18,12 @@ const activities = (await getCollection('community')).sort(
 					{activity.data.organization}
 					{activity.data.role && <> &middot; {activity.data.role}</>}
 					&middot; {activity.data.startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
-					{' – '}
-					{activity.data.endDate
-						? activity.data.endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' })
-						: 'Present'}
+					{activity.data.endDate && (
+						<>
+							{' – '}
+							{activity.data.endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
+						</>
+					)}
 				</p>
 				{activity.data.summary && <p>{activity.data.summary}</p>}
 				{activity.data.url && <p><a href={activity.data.url}>Learn more</a></p>}
