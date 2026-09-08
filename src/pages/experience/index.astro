@@ -8,7 +8,13 @@ const stack: [string, string][] = [
 	['languages', 'Python, Scala, Java, Kotlin, Node.js, PHP, Ruby'],
 	['data & storage', 'DynamoDB, PostgreSQL, MySQL, Redshift, Snowflake, Iceberg'],
 	['identity, observability & ipaas', 'Datadog, Eppo, LaunchDarkly, Okta/Auth0, Fivetran, Patchworks'],
+	['ai & agents', 'Claude Code, agentic AI governance, OWASP LLM06, Team Topologies for AI adoption'],
 ];
+
+// The stack matrix is a 2-column grid; the last visual row (the final 1 or
+// 2 cells, depending on whether the count is odd or even) shouldn't get a
+// bottom border so it doesn't double up against the grid's own border.
+const stackLastRowStart = stack.length - (stack.length % 2 === 0 ? 2 : 1);
 
 const roles = [
 	{
@@ -68,8 +74,8 @@ const earlier = [
 	<section>
 		<span class="section-label bracket-label">stack --list</span>
 		<div class="stack-grid">
-			{stack.map(([category, items]) => (
-				<div class="stack-cell">
+			{stack.map(([category, items], i) => (
+				<div class={`stack-cell${i >= stackLastRowStart ? ' stack-cell--last-row' : ''}`}>
 					<span class="stack-label">{category}</span>
 					<span class="stack-desc">{items}</span>
 				</div>
