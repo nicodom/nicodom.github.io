@@ -11,6 +11,7 @@ const speaking = defineCollection({
     slidesUrl: z.string().optional(),
     videoUrl: z.string().optional(),
     eventUrl: z.string().optional(),
+    photosUrl: z.string().optional(),
     summary: z.string().optional(),
   }),
 });
