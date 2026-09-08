@@ -546,8 +546,10 @@ main {
 	.stack-cell:nth-child(odd) {
 		border-right: 1px solid var(--line);
 	}
-	.stack-cell:nth-last-child(2),
-	.stack-cell:last-child {
+	/* Set on the last 1 or 2 cells (depending on odd/even count) by the
+	   page, since CSS alone can't identify "the last visual row" for an
+	   arbitrary, possibly-odd number of items in a 2-column grid. */
+	.stack-cell--last-row {
 		border-bottom: none;
 	}
 }
