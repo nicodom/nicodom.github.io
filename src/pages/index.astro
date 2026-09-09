@@ -47,13 +47,20 @@ const languages = [
 
 <BaseLayout title="Domenico Fioravanti — Senior Engineering Leader">
 	<section class="hero">
-		<span class="section-label">Senior Engineering Leader &middot; Sociotechnical Architect</span>
-		<h1>Domenico Fioravanti</h1>
-		<p class="tagline-lead">
-			<span class="prompt-marker">&gt;</span>
-			Aligning team structures, ways of working, platform architecture, and AI adoption to
-			maximise flow, resilience, and business outcomes.<span class="cursor" aria-hidden="true"></span>
-		</p>
+		<div class="hero-top">
+			<div class="hero-intro">
+				<span class="section-label">Senior Engineering Leader &middot; Sociotechnical Architect</span>
+				<h1>Domenico Fioravanti</h1>
+				<p class="tagline-lead">
+					<span class="prompt-marker">&gt;</span>
+					Aligning team structures, ways of working, platform architecture, and AI adoption to
+					maximise flow, resilience, and business outcomes.<span class="cursor" aria-hidden="true"></span>
+				</p>
+			</div>
+			<div class="hero-photo">
+				<img src="/images/domenico.jpg" alt="Domenico Fioravanti" width="120" height="120" />
+			</div>
+		</div>
 		<div class="cta-row">
 			<div class="social-inline">
 				<a href={LINKEDIN_URL}>LinkedIn</a>
@@ -158,6 +165,30 @@ const languages = [
 <style>
 	.hero h1 {
 		margin-bottom: 0.25rem;
+	}
+	.hero-top {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 1.5rem;
+		flex-wrap: wrap;
+	}
+	.hero-intro {
+		flex: 1;
+		min-width: 240px;
+	}
+	.hero-photo {
+		width: 120px;
+		height: 120px;
+		flex-shrink: 0;
+		border: 1px solid var(--line);
+		background: var(--bg-panel);
+	}
+	.hero-photo img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
 	}
 	.explore-grid {
 		margin: 1rem 0 0;
