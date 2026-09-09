@@ -1,32 +1,39 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import TalkItem from '../../components/TalkItem.astro';
 
-const talks = (await getCollection('speaking')).sort(
-	(a, b) => b.data.date.valueOf() - a.data.date.valueOf()
-);
+const talks = await getCollection('speaking');
+const now = new Date();
+
+const upcoming = talks
+	.filter((talk) => talk.data.date.valueOf() >= now.valueOf())
+	.sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
+
+const past = talks
+	.filter((talk) => talk.data.date.valueOf() < now.valueOf())
+	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
 <BaseLayout title="Speaking | Domenico Fioravanti" description="Conference talks and speaking engagements.">
 	<h1>Speaking</h1>
 	{talks.length === 0 && <p>Talks coming soon.</p>}
-	<ul class="entry-list">
-		{talks.map((talk) => (
-			<li>
-				<h2>{talk.data.title}</h2>
-				<p class="meta">
-					{talk.data.event}
-					{talk.data.location && <> &middot; {talk.data.location}</>}
-					&middot; {talk.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
-				</p>
-				{talk.data.summary && <p>{talk.data.summary}</p>}
-				<p class="links">
-					{talk.data.slidesUrl && <a href={talk.data.slidesUrl}>Slides</a>}
-					{talk.data.videoUrl && <a href={talk.data.videoUrl}>Video</a>}
-					{talk.data.eventUrl && <a href={talk.data.eventUrl}>Event</a>}
-					{talk.data.photosUrl && <a href={talk.data.photosUrl}>Photos</a>}
-				</p>
-			</li>
-		))}
-	</ul>
+
+	{upcoming.length > 0 && (
+		<section>
+			<h2 class="section-label section-heading">Upcoming</h2>
+			<ul class="entry-list">
+				{upcoming.map((talk) => <TalkItem talk={talk} />)}
+			</ul>
+		</section>
+	)}
+
+	{past.length > 0 && (
+		<section>
+			<h2 class="section-label section-heading">Past</h2>
+			<ul class="entry-list">
+				{past.map((talk) => <TalkItem talk={talk} />)}
+			</ul>
+		</section>
+	)}
 </BaseLayout>

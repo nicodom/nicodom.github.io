@@ -1,0 +1,25 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+	talk: CollectionEntry<'speaking'>;
+}
+
+const { talk } = Astro.props;
+---
+
+<li>
+	<h2>{talk.data.title}</h2>
+	<p class="meta">
+		{talk.data.event}
+		{talk.data.location && <> &middot; {talk.data.location}</>}
+		&middot; {talk.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+	</p>
+	{talk.data.summary && <p>{talk.data.summary}</p>}
+	<p class="links">
+		{talk.data.slidesUrl && <a href={talk.data.slidesUrl}>Slides</a>}
+		{talk.data.videoUrl && <a href={talk.data.videoUrl}>Video</a>}
+		{talk.data.eventUrl && <a href={talk.data.eventUrl}>Event</a>}
+		{talk.data.photosUrl && <a href={talk.data.photosUrl}>Photos</a>}
+	</p>
+</li>
