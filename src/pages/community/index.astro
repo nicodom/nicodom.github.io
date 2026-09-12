@@ -1,33 +1,43 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import CommunityItem from '../../components/CommunityItem.astro';
 
-const activities = (await getCollection('community')).sort(
-	(a, b) => b.data.startDate.valueOf() - a.data.startDate.valueOf()
-);
+const activities = await getCollection('community');
+const now = new Date();
+
+function endOf(activity: (typeof activities)[number]) {
+	return (activity.data.endDate ?? activity.data.startDate).valueOf();
+}
+
+const upcoming = activities
+	.filter((activity) => endOf(activity) >= now.valueOf())
+	.sort((a, b) => a.data.startDate.valueOf() - b.data.startDate.valueOf());
+
+const past = activities
+	.filter((activity) => endOf(activity) < now.valueOf())
+	.sort((a, b) => b.data.startDate.valueOf() - a.data.startDate.valueOf());
 ---
 
 <BaseLayout title="Community | Domenico Fioravanti" description="Community organizing activity.">
 	<h1>Community</h1>
 	{activities.length === 0 && <p>Community activity coming soon.</p>}
-	<ul class="entry-list">
-		{activities.map((activity) => (
-			<li>
-				<h2>{activity.data.title}</h2>
-				<p class="meta">
-					{activity.data.organization}
-					{activity.data.role && <> &middot; {activity.data.role}</>}
-					&middot; {activity.data.startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
-					{activity.data.endDate && (
-						<>
-							{' – '}
-							{activity.data.endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
-						</>
-					)}
-				</p>
-				{activity.data.summary && <p>{activity.data.summary}</p>}
-				{activity.data.url && <p><a href={activity.data.url}>Learn more</a></p>}
-			</li>
-		))}
-	</ul>
+
+	{upcoming.length > 0 && (
+		<section>
+			<h2 class="section-label section-heading">Upcoming</h2>
+			<ul class="entry-list">
+				{upcoming.map((activity) => <CommunityItem activity={activity} />)}
+			</ul>
+		</section>
+	)}
+
+	{past.length > 0 && (
+		<section>
+			<h2 class="section-label section-heading">Past</h2>
+			<ul class="entry-list">
+				{past.map((activity) => <CommunityItem activity={activity} />)}
+			</ul>
+		</section>
+	)}
 </BaseLayout>

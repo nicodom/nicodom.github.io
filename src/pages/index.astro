@@ -1,6 +1,37 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { GITHUB_URL, LINKEDIN_URL } from '../lib/contact';
+
+const now = new Date();
+
+function formatEventDate(date: Date) {
+	return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+const upcomingTalks = (await getCollection('speaking'))
+	.filter((talk) => talk.data.date.valueOf() >= now.valueOf())
+	.map((talk) => ({
+		kind: 'Speaking',
+		title: talk.data.title,
+		context: talk.data.event,
+		date: talk.data.date,
+		href: talk.data.eventUrl ?? '/speaking/',
+	}));
+
+const upcomingCommunity = (await getCollection('community'))
+	.filter((activity) => (activity.data.endDate ?? activity.data.startDate).valueOf() >= now.valueOf())
+	.map((activity) => ({
+		kind: 'Community',
+		title: activity.data.title,
+		context: activity.data.organization,
+		date: activity.data.startDate,
+		href: activity.data.url ?? '/community/',
+	}));
+
+const upcomingEvents = [...upcomingTalks, ...upcomingCommunity]
+	.sort((a, b) => a.date.valueOf() - b.date.valueOf())
+	.slice(0, 3);
 
 const stats = [
 	{ value: '25+', label: 'years_experience' },
@@ -68,6 +99,24 @@ const languages = [
 				<a href={GITHUB_URL}>GitHub</a>
 			</div>
 		</div>
+
+		{upcomingEvents.length > 0 && (
+			<div class="next-up">
+				<span class="next-up-label bracket-label">next up</span>
+				<ul class="next-up-list">
+					{upcomingEvents.map((event) => (
+						<li>
+							<a href={event.href} class="next-up-item">
+								<span class="next-up-kind">{event.kind}</span>
+								<span class="next-up-title">{event.title}</span>
+								<span class="next-up-meta">{event.context} &middot; {formatEventDate(event.date)}</span>
+							</a>
+						</li>
+					))}
+				</ul>
+			</div>
+		)}
+
 		<div class="stats">
 			{stats.map((stat) => (
 				<div class="stat">
@@ -192,5 +241,59 @@ const languages = [
 	}
 	.explore-grid {
 		margin: 1rem 0 0;
+	}
+	.next-up {
+		margin: 1.5rem 0;
+		border: 1px solid var(--accent);
+		background: var(--bg-panel);
+		padding: 1rem 1.25rem;
+	}
+	.next-up-label {
+		display: block;
+		font-family: var(--font-mono);
+		font-size: 0.75rem;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--accent);
+		margin-bottom: 0.85rem;
+	}
+	.next-up-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.85rem;
+	}
+	.next-up-list li + li {
+		padding-top: 0.85rem;
+		border-top: 1px solid var(--line);
+	}
+	.next-up-item {
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
+		color: var(--fg);
+		text-decoration: none;
+	}
+	.next-up-kind {
+		font-family: var(--font-mono);
+		font-size: 0.7rem;
+		color: var(--muted);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+	}
+	.next-up-title {
+		font-family: var(--font-display);
+		font-weight: 600;
+		font-size: 1.05rem;
+	}
+	.next-up-item:hover .next-up-title {
+		color: var(--accent);
+	}
+	.next-up-meta {
+		font-family: var(--font-mono);
+		font-size: 0.8rem;
+		color: var(--muted);
 	}
 </style>

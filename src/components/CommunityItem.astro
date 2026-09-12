@@ -1,0 +1,26 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+	activity: CollectionEntry<'community'>;
+}
+
+const { activity } = Astro.props;
+---
+
+<li>
+	<h2>{activity.data.title}</h2>
+	<p class="meta">
+		{activity.data.organization}
+		{activity.data.role && <> &middot; {activity.data.role}</>}
+		&middot; {activity.data.startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+		{activity.data.endDate && (
+			<>
+				{' – '}
+				{activity.data.endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+			</>
+		)}
+	</p>
+	{activity.data.summary && <p>{activity.data.summary}</p>}
+	{activity.data.url && <p><a href={activity.data.url}>Learn more</a></p>}
+</li>
