@@ -141,7 +141,8 @@ h3 {
 
 .site-header nav ul {
 	display: flex;
-	gap: 1.25rem;
+	flex-wrap: wrap;
+	gap: 0.5rem 1.25rem;
 	list-style: none;
 	margin: 0;
 	padding: 0;
@@ -230,10 +231,11 @@ main {
 .section-label {
 	font-family: var(--font-mono);
 	font-size: 0.75rem;
+	font-weight: 400;
 	letter-spacing: 0.12em;
 	text-transform: uppercase;
 	color: var(--muted);
-	margin-bottom: 0.75rem;
+	margin: 0 0 0.75rem;
 	display: block;
 }
 
