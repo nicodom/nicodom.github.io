@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fioravanti Topologies · Domenico Fioravanti</title>
+<meta name="description" content="Domenico Fioravanti's work as an interactive 3D board: Team Topologies, event-driven Data Mesh, bounded AI agents and a career from Rome to Dublin.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" href="/favicon.ico">
+<link rel="canonical" href="https://nicodom.github.io/topologies/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nicodom.github.io/topologies/">
+<meta property="og:title" content="Fioravanti Topologies · Domenico Fioravanti">
+<meta property="og:description" content="Domenico Fioravanti's work as an interactive 3D board: Team Topologies, event-driven Data Mesh, bounded AI agents and a career from Rome to Dublin.">
+<meta property="og:image" content="https://nicodom.github.io/images/domenico.jpg">
+<meta name="twitter:card" content="summary">
+<script>
+  // Embedded in /topologies/ the site header already names the page, so hide our own name tag there.
+  try { if (window.self !== window.top) document.documentElement.dataset.embed = ''; } catch (e) { document.documentElement.dataset.embed = ''; }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: full-bleed 3D board drawn in Team Topologies notation; a name tag top-left and one chapter panel bottom-left (bottom sheet on phones). Single light "whiteboard" look by choice. */
+  :root {
+    --board: #eef0f3;
+    --ink: #1d2433;
+    --ink-soft: #586176;
+    --rule: #d3d8e0;
+    --panel: rgba(250, 251, 252, 0.86);
+    --stream: #f2c443;
+    --platform: #6f9fd8;
+    --enabling: #a77cc0;
+    --subsystem: #ef8a4a;
+    --agent: #13a38b;
+    --dom: #c2253d;
+    --display: "Familjen Grotesk", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    color-scheme: light;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { background: var(--board); color: var(--ink); font-family: var(--display); overflow: hidden; }
+  #gl { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+  #labels { position: fixed; inset: 0; pointer-events: none; }
+
+  .tag {
+    position: fixed;
+    top: calc(16px + env(safe-area-inset-top, 0px));
+    left: max(16px, env(safe-area-inset-left, 0px));
+    display: grid; gap: 2px;
+  }
+  .tag h1 { margin: 0; font-size: clamp(1.5rem, 3.2vw, 2.25rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.05; text-wrap: balance; }
+  .tag a { font: 500 0.75rem/1 var(--mono); color: var(--ink-soft); text-underline-offset: 3px; margin-top: 6px; justify-self: start; }
+  .tag a:hover { color: var(--ink); }
+  .tag a:focus-visible { outline: 2px solid var(--dom); outline-offset: 2px; }
+  .tag p { margin: 0; font-family: var(--mono); font-size: 0.75rem; color: var(--ink-soft); letter-spacing: 0.02em; }
+
+  .panel {
+    position: fixed;
+    left: max(16px, env(safe-area-inset-left, 0px));
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    width: min(400px, calc(100% - 32px));
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    box-shadow: 0 18px 40px -24px rgba(29, 36, 51, 0.45);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: grid; gap: 14px;
+    padding: 16px 18px 18px;
+  }
+  .nav { display: flex; flex-wrap: wrap; gap: 6px; }
+  .nav button {
+    font: 500 0.72rem/1 var(--mono); letter-spacing: 0.04em;
+    color: var(--ink); background: transparent;
+    border: 1px solid var(--rule); border-radius: 999px;
+    padding: 8px 11px; cursor: pointer;
+  }
+  .nav button[aria-pressed="true"] { background: var(--ink); color: var(--board); border-color: var(--ink); }
+  .nav button:hover { border-color: var(--ink); }
+  .nav button:focus-visible, .tour:focus-visible { outline: 2px solid var(--dom); outline-offset: 2px; }
+  .chapter { display: grid; gap: 8px; min-width: 0; }
+  .chapter .kicker { display: flex; align-items: center; gap: 8px; font: 500 0.7rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
+  .chapter .kicker i { width: 12px; height: 12px; border-radius: 3px; background: var(--k, var(--ink)); display: inline-block; }
+  .chapter h2 { margin: 0; font-size: 1.35rem; font-weight: 700; letter-spacing: -0.015em; line-height: 1.15; text-wrap: balance; }
+  .chapter p { margin: 0; font-size: 0.95rem; line-height: 1.5; color: var(--ink); max-width: 62ch; }
+  .facts { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 2px 0 0; padding: 0; list-style: none; font: 400 0.75rem/1.4 var(--mono); color: var(--ink-soft); }
+  .facts b { color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; }
+  .foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .tour { font: 500 0.72rem/1 var(--mono); color: var(--ink-soft); background: none; border: 0; padding: 6px 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+  .hint { font: 400 0.7rem/1.2 var(--mono); color: var(--ink-soft); }
+  .progress { height: 2px; background: var(--rule); border-radius: 2px; overflow: hidden; }
+  .progress span { display: block; height: 100%; width: 0; background: var(--ink); }
+
+  /* 3D labels */
+  .lbl {
+    font: 500 11px/1.25 var(--mono);
+    color: var(--ink);
+    background: rgba(250, 251, 252, 0.9);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--c, var(--ink));
+    padding: 4px 7px;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 400ms ease;
+  }
+  .lbl b { font-family: var(--display); font-weight: 700; font-size: 12px; display: block; }
+  .lbl.small { font-size: 10px; padding: 2px 6px; }
+  body[data-ch="overview"] .lbl[data-ch~="overview"],
+  body[data-ch="teams"] .lbl[data-ch~="teams"],
+  body[data-ch="streams"] .lbl[data-ch~="streams"],
+  body[data-ch="agents"] .lbl[data-ch~="agents"],
+  body[data-ch="journey"] .lbl[data-ch~="journey"] { opacity: 1; }
+
+  [hidden] { display: none !important; }
+  [data-embed] .tag { display: none; }
+  .err { position: fixed; inset: 0; display: grid; place-items: center; padding-inline: max(16px, env(safe-area-inset-left, 0px)); font-family: var(--mono); color: var(--ink-soft); text-align: center; }
+
+  @media (max-width: 640px) {
+    .panel { left: max(10px, env(safe-area-inset-left, 0px)); width: calc(100% - 20px); bottom: calc(10px + env(safe-area-inset-bottom, 0px)); padding: 12px 14px 14px; gap: 10px; max-height: 46%; overflow-y: auto; }
+    .chapter h2 { font-size: 1.15rem; }
+    .chapter p { font-size: 0.88rem; }
+    .hint { display: none; }
+    .lbl { font-size: 10px; }
+    .lbl b { font-size: 11px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .lbl { transition: none; } }
+</style>
+</head>
+<body>
+<canvas id="gl" aria-label="3D model of Domenico Fioravanti's work: teams, event streams, AI agents and a career timeline"></canvas>
+<div id="labels"></div>
+
+<header class="tag">
+  <h1>Domenico Fioravanti</h1>
+  <p>Engineering leader · Sociotechnical architect · Dublin</p>
+  <a href="/topologies/">Exit full screen</a>
+</header>
+
+<section class="panel" aria-live="polite">
+  <nav class="nav" aria-label="Chapters">
+    <button type="button" id="b-overview" data-go="overview">Overview</button>
+    <button type="button" id="b-teams" data-go="teams">Teams</button>
+    <button type="button" id="b-streams" data-go="streams">Streams</button>
+    <button type="button" id="b-agents" data-go="agents">Agents</button>
+    <button type="button" id="b-journey" data-go="journey">Journey</button>
+  </nav>
+  <div class="chapter" id="chapter"></div>
+  <div class="progress" aria-hidden="true"><span id="bar"></span></div>
+  <div class="foot">
+    <button type="button" class="tour" id="tour">Pause tour</button>
+    <span class="hint">Drag to orbit · scroll to zoom</span>
+  </div>
+</section>
+<div class="err" id="err" hidden>The 3D scene couldn't start. This browser may have WebGL turned off.</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+// ---------- content (from nicodom.github.io) ----------
+const CHAPTERS = {
+  overview: {
+    color: 'var(--dom)', kicker: 'Overview',
+    title: 'Teams and the systems they run, designed together',
+    body: '25+ years building engineering organisations across Europe, the US and LATAM. The board below is his work drawn in Team Topologies notation. The red figure walking the floor is Dom.',
+    facts: [['25+', 'years'], ['45', 'people hired into a new org'], ['5', 'languages'], ['MSc', 'La Sapienza, Rome']]
+  },
+  teams: {
+    color: 'var(--stream)', kicker: 'Team Topologies',
+    title: 'From zero to 45 people in two years',
+    body: 'Yellow stream-aligned teams carry work to customers. The blue platform underneath takes load off them, the purple enabling team moves across to coach, and the orange subsystem holds the hard specialist work. At Thérapie he grew an org like this from nothing to 7 teams.',
+    facts: [['7', 'teams'], ['people', 'live'], ['20+', 'engineers led at RGG']]
+  },
+  streams: {
+    color: 'var(--subsystem)', kicker: 'Event-driven Data Mesh',
+    title: 'Every team publishes, Flink reshapes in flight',
+    body: 'Events flow along each team as Kafka topics. Two streams pass through a Flink job and come out transformed, then land in data products owned by the teams. He led a three-year move from a data monolith to this kind of mesh.',
+    facts: [['Kafka', ''], ['Flink', ''], ['Tableflow', ''], ['Snowflake', ''], ['IE · UK · US', 'markets']]
+  },
+  agents: {
+    color: 'var(--agent)', kicker: 'Bounded agency',
+    title: 'AI agents that stay inside their team',
+    body: 'Each green agent moves freely but can never leave its box. His framework combines Team Topologies, Data Mesh and OWASP LLM06 (excessive agency) so agents get clear ownership and clear limits.',
+    facts: [['11 Nov 2026', 'CIO/CISO Ireland Summit talk'], ['Claude Code', 'org-wide AI-assisted dev']]
+  },
+  journey: {
+    color: 'var(--ink)', kicker: 'Rome to Dublin',
+    title: 'Nine roles, one thread',
+    body: 'The spiral climbs from a research fellowship at La Sapienza in 2000 to running engineering in Dublin. Along the way he co-owned a company, went from architect to director, and organised seven Kafka, Flink and CTO Craft meetups.',
+    facts: [['9', 'roles'], ['7', 'talks since 2022'], ['7', 'meetups organised']]
+  }
+};
+const ORDER = ['overview', 'teams', 'streams', 'agents', 'journey'];
+const CAREER = [
+  { y: 2000.2, t: 'Co-founder · Research Fellow', o: 'Brainwave · La Sapienza, Rome' },
+  { y: 2004.0, t: 'Co-owner · Architect', o: 'Digital Solutions' },
+  { y: 2011.0, t: 'Head of Ops · J2EE Architect', o: 'Genius Bytes' },
+  { y: 2015.6, t: 'Senior Developer', o: 'BIONIC' },
+  { y: 2016.6, t: 'Lead Engineer', o: "Gilt · Hudson's Bay" },
+  { y: 2018.8, t: 'Director of Engineering', o: "Hudson's Bay Company" },
+  { y: 2020.0, t: 'Senior Eng Manager', o: 'FabFitFun' },
+  { y: 2020.7, t: 'Director of Engineering', o: 'Thérapie Clinic' },
+  { y: 2023.1, t: 'Senior Director of Engineering', o: 'Rue Gilt Groupe, Dublin' }
+];
+
+// ---------- renderer ----------
+const canvas = document.getElementById('gl');
+let renderer;
+try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true }); }
+catch (e) { document.getElementById('err').hidden = false; throw e; }
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const labelRenderer = new CSS2DRenderer({ element: document.getElementById('labels') });
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color().setRGB(1.18, 1.2, 1.24);
+const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 300);
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.dampingFactor = 0.07;
+controls.minDistance = 6;
+controls.maxDistance = 70;
+controls.maxPolarAngle = 1.45;
+controls.enablePan = false;
+
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ---------- palette ----------
+const C = {
+  ink: '#1d2433', inkSoft: '#3a4459', stream: '#f2c443', streamEdge: '#d9a51f', platform: '#6f9fd8', platformDk: '#4f7fbd',
+  enabling: '#a77cc0', subsystem: '#ef8a4a', agent: '#13a38b', dom: '#c2253d', white: '#fbfbfc', event: '#2a3550'
+};
+const mat = (color, o = {}) => new THREE.MeshStandardMaterial(Object.assign({ color, roughness: 0.6 }, o));
+function rbox(w, h, d, r = 0.08) { return new RoundedBoxGeometry(w, h, d, 3, Math.min(r, Math.min(w, h, d) * 0.45)); }
+function add(geo, material, x, y, z, parent = scene) {
+  const m = new THREE.Mesh(geo, material);
+  m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true;
+  parent.add(m); return m;
+}
+function label(html, chapters, pos, cls = '', color) {
+  const el = document.createElement('div');
+  el.className = 'lbl ' + cls;
+  el.dataset.ch = chapters;
+  if (color) el.style.setProperty('--c', color);
+  el.innerHTML = html;
+  const o = new CSS2DObject(el);
+  o.position.copy(pos);
+  scene.add(o);
+  return o;
+}
+const V = (x, y, z) => new THREE.Vector3(x, y, z);
+
+// ---------- ground: a whiteboard grid ----------
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.ShadowMaterial({ opacity: 0.13 }));
+ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
+const grid = new THREE.GridHelper(80, 80, '#c9cfd9', '#d8dde4');
+grid.position.y = 0.002; grid.material.transparent = true; grid.material.opacity = 0.7; scene.add(grid);
+
+// ---------- platform team ----------
+const PT = 0.4; // platform top
+add(rbox(17, PT, 10.5, 0.18), mat(C.platform, { roughness: 0.5 }), 0, PT / 2, 0);
+add(rbox(17.15, 0.06, 10.65, 0.03), mat(C.platformDk), 0, 0.03, 0);
+
+// ---------- stream-aligned teams ----------
+const LANES = [-3.6, -1.2, 1.2, 3.6];
+const LT = PT + 0.32; // lane top
+LANES.forEach(z => {
+  add(rbox(15, 0.32, 1.3, 0.12), mat(C.stream, { roughness: 0.55 }), 0, PT + 0.16, z);
+  // flow chevrons along the lane edge (value flows to the right, as in TT diagrams)
+  for (let i = 0; i < 6; i++) {
+    const ch = add(new THREE.ConeGeometry(0.09, 0.22, 3), mat(C.streamEdge), -6 + i * 2.4, LT + 0.01, z + 0.5);
+    ch.rotation.set(0, 0, -Math.PI / 2); ch.scale.y = 0.6; ch.castShadow = false;
+  }
+});
+
+// data products at the end of each stream
+const DOMAINS = ['Orders', 'Catalog', 'Pricing', 'Customers'];
+LANES.forEach((z, i) => {
+  add(new THREE.CylinderGeometry(0.55, 0.6, 0.5, 32), mat(C.white, { roughness: 0.35 }), 8.05, PT + 0.25, z);
+  add(new THREE.CylinderGeometry(0.42, 0.42, 0.04, 32), mat(C.ink), 8.05, PT + 0.52, z);
+  label(`${DOMAINS[i]}`, 'streams', V(8.05, PT + 1.05, z), 'small', C.ink);
+});
+
+// ---------- complicated subsystem: a Flink job ----------
+const FX = 1.5, FZ = 2.4;
+const octa = add(new THREE.CylinderGeometry(1.9, 1.9, 1.1, 8), mat(C.subsystem, { transparent: true, opacity: 0.55, roughness: 0.4, depthWrite: false }), FX, PT + 0.55, FZ);
+octa.rotation.y = Math.PI / 8; octa.castShadow = false;
+const octaEdge = new THREE.LineSegments(new THREE.EdgesGeometry(octa.geometry), new THREE.LineBasicMaterial({ color: '#c8642a' }));
+octa.add(octaEdge);
+const flinkRing = add(new THREE.TorusGeometry(1.0, 0.05, 8, 48), mat(C.subsystem, { emissive: C.subsystem, emissiveIntensity: 0.3 }), FX, PT + 1.35, FZ);
+flinkRing.rotation.x = Math.PI / 2;
+
+// ---------- enabling team: a gantry that glides over the streams ----------
+const enabling = new THREE.Group(); scene.add(enabling);
+const enSlab = add(rbox(0.8, 1.2, 9.8, 0.2), mat(C.enabling, { transparent: true, opacity: 0.62, roughness: 0.4 }), 0, 1.95, 0, enabling);
+[-5.1, 5.1].forEach(z => add(rbox(0.5, 1.5, 0.3, 0.1), mat(C.enabling), 0, 0.75 + PT * 0.5 - 0.0, z, enabling));
+
+// ---------- people ----------
+const people = [];
+const bodyGeo = new THREE.CapsuleGeometry(0.1, 0.18, 4, 10);
+const headGeo = new THREE.SphereGeometry(0.095, 16, 12);
+const inkMat = mat(C.ink, { roughness: 0.5 });
+function pawn(x, y, z, parent = scene, color) {
+  const g = new THREE.Group(); g.position.set(x, y, z); parent.add(g);
+  add(bodyGeo, color ? mat(color) : inkMat, 0, 0.19, 0, g);
+  add(headGeo, color ? mat(color) : inkMat, 0, 0.48, 0, g);
+  g.userData.baseY = y;
+  return g;
+}
+LANES.forEach(z => { for (let k = 0; k < 7; k++) people.push({ g: pawn(-7.0 + k * 0.5, LT, z - 0.42), team: 'stream' }); });
+for (let k = 0; k < 10; k++) people.push({ g: pawn(-7.2 + k * 0.5, PT, 4.85), team: 'platform' });
+for (let k = 0; k < 3; k++) people.push({ g: pawn(0, 2.55, -2 + k * 2, enabling), team: 'enabling' });
+[[-0.5, -0.5], [0.5, -0.5], [-0.5, 0.5], [0.5, 0.5]].forEach(([dx, dz]) => people.push({ g: pawn(FX + dx, PT + 1.1, FZ + dz), team: 'subsystem' }));
+// order the hiring: platform first, then streams, then enabling and specialists, as an org usually grows
+people.sort((a, b) => ({ platform: 0, stream: 1, subsystem: 2, enabling: 3 }[a.team] - { platform: 0, stream: 1, subsystem: 2, enabling: 3 }[b.team]));
+people.forEach((p, i) => { p.order = i; p.phase = Math.random() * 6; });
+
+// Dom walks the floor
+const dom = pawn(0, 0, 0, scene, C.dom);
+dom.scale.setScalar(1.35);
+const domLabel = label('<b>Dom</b>walking the floor', 'overview', V(0, 1.25, 0), '', C.dom);
+dom.add(domLabel); domLabel.position.set(0, 0.95, 0);
+
+// ---------- events (Kafka topics) ----------
+const PER = 13, N = PER * LANES.length;
+const cubeMesh = new THREE.InstancedMesh(rbox(0.26, 0.2, 0.26, 0.05), mat(C.event, { roughness: 0.45 }), N);
+const ballMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(0.15, 16, 12), mat(C.subsystem, { roughness: 0.35, emissive: C.subsystem, emissiveIntensity: 0.15 }), N);
+[cubeMesh, ballMesh].forEach(m => { m.castShadow = true; scene.add(m); });
+const events = [];
+LANES.forEach((z, li) => { for (let k = 0; k < PER; k++) events.push({ li, z, off: k / PER + Math.random() * 0.03, speed: 0.055 + li * 0.006 }); });
+const dummy = new THREE.Object3D();
+const ZERO = new THREE.Matrix4().makeScale(0, 0, 0);
+
+// platform services rising into the streams (X-as-a-service)
+const rings = [];
+for (let i = 0; i < 9; i++) {
+  const r = add(new THREE.TorusGeometry(0.26, 0.045, 8, 28), mat('#9cc0ea', { transparent: true, opacity: 0.9 }), 0, 0, 0);
+  r.rotation.x = Math.PI / 2; r.castShadow = false;
+  rings.push({ r, x: -6 + (i % 5) * 3 + Math.random(), z: [-2.4, 0, 2.4][i % 3], off: i / 9 });
+}
+
+// ---------- AI agents with bounded agency ----------
+const agents = [];
+[[4.8, 0], [5.8, 1], [5.2, 2], [4.4, 3]].forEach(([x, li], i) => {
+  const z = LANES[li];
+  const g = new THREE.Group(); g.position.set(x, LT + 0.5, z); scene.add(g);
+  const size = V(1.0, 0.9, 1.0);
+  const boxGeo = new THREE.BoxGeometry(size.x, size.y, size.z);
+  const fill = new THREE.Mesh(boxGeo, new THREE.MeshStandardMaterial({ color: C.agent, transparent: true, opacity: 0.1, depthWrite: false }));
+  const edges = new THREE.LineSegments(new THREE.EdgesGeometry(boxGeo), new THREE.LineBasicMaterial({ color: C.agent, transparent: true, opacity: 0.9 }));
+  g.add(fill, edges);
+  const orb = add(new THREE.IcosahedronGeometry(0.12, 1), mat(C.agent, { emissive: C.agent, emissiveIntensity: 0.6, roughness: 0.3 }), 0, 0, 0, g);
+  const vel = V(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize().multiplyScalar(0.9);
+  agents.push({ g, orb, vel, half: size.clone().multiplyScalar(0.5).subScalar(0.13), edges, fill, flash: 0 });
+  if (i === 0) label('<b>AI agent</b>free inside its box, never outside', 'agents', V(x, LT + 1.35, z), '', C.agent);
+  else label('agent', 'agents', V(x, LT + 1.2, z), 'small', C.agent);
+});
+
+// ---------- career helix: Rome 2000 → Dublin 2026 ----------
+const R = 11.6, Y0 = 0.35, Y1 = 10.5, TURNS = 2.1;
+const yearToU = y => (y - 2000) / 26.8;
+const helixPoint = u => V(Math.cos(u * TURNS * Math.PI * 2 + 2.4) * R, Y0 + u * (Y1 - Y0), Math.sin(u * TURNS * Math.PI * 2 + 2.4) * R);
+class Helix extends THREE.Curve { getPoint(u, out = new THREE.Vector3()) { return out.copy(helixPoint(u)); } }
+const helix = new Helix();
+const tube = add(new THREE.TubeGeometry(helix, 400, 0.055, 8, false), mat(C.inkSoft, { roughness: 0.4 }), 0, 0, 0);
+tube.castShadow = false;
+const careerMarks = [];
+CAREER.forEach((c, i) => {
+  const u = yearToU(c.y), p = helixPoint(u);
+  const last = i === CAREER.length - 1;
+  const rr = 0.24 + i * 0.035;
+  const disc = add(new THREE.CylinderGeometry(rr, rr, 0.14, 28), mat(last ? C.dom : C.ink, { roughness: 0.4 }), p.x, p.y, p.z);
+  disc.castShadow = false;
+  careerMarks.push(disc);
+  const below = i === 3 || i === 6;   // keep neighbouring years from overlapping
+  label(`<b>${Math.floor(c.y)}</b>${c.t}<br>${c.o}`, 'journey', V(p.x, p.y + (below ? -0.75 : 0.6), p.z), '', last ? C.dom : C.ink);
+});
+const pulseN = 36;
+const pulses = new THREE.InstancedMesh(new THREE.SphereGeometry(0.09, 10, 8), mat('#ffffff', { emissive: '#ffffff', emissiveIntensity: 0.4 }), pulseN);
+scene.add(pulses);
+
+// ---------- chapter labels ----------
+label('<b>Stream-aligned teams</b>4 teams, value flows right', 'teams', V(-5.2, LT + 0.9, LANES[0]), '', C.streamEdge);
+label('<b>Platform team</b>services rise into the streams', 'teams', V(3.6, PT + 0.6, 5.0), '', C.platformDk);
+label('<b>Enabling team</b>moves across to coach', 'teams', V(0, 3.2, -4.8), '', C.enabling);
+label('<b>Complicated subsystem</b>specialist work', 'teams', V(FX, PT + 2.1, FZ), '', C.subsystem);
+label('<b>Kafka topics</b>one per team', 'streams', V(-6.6, LT + 0.8, LANES[0]), '', C.ink);
+label('<b>Flink job</b>events in, new shapes out', 'streams', V(FX, PT + 2.1, FZ), '', C.subsystem);
+label('<b>Data products</b>owned by the teams', 'streams', V(8.05, PT + 1.7, LANES[0]), '', C.ink);
+const enLabel = label('<b>enabling team</b>', 'overview', V(0, 3.0, 0), 'small', C.enabling);
+enabling.add(enLabel); enLabel.position.set(0, 3.0, 0);
+
+// ---------- lights ----------
+scene.add(new THREE.HemisphereLight('#ffffff', '#c8ccd4', 1.25));
+const sun = new THREE.DirectionalLight('#fff6ea', 2.2);
+sun.position.set(12, 22, 10);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+Object.assign(sun.shadow.camera, { left: -16, right: 16, top: 16, bottom: -16, near: 2, far: 60 });
+sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.02; sun.shadow.radius = 4;
+scene.add(sun);
+
+// ---------- camera chapters ----------
+const SHOTS = {
+  overview: { pos: V(21, 19, 27), target: V(0, 3.2, 0) },
+  teams: { pos: V(-6.5, 9.5, 12.5), target: V(-1, 0.8, 0.4) },
+  streams: { pos: V(11, 6.5, 10), target: V(3, 0.8, 1.2) },
+  agents: { pos: V(10.5, 4.6, -4.5), target: V(5, 1.1, 0.6) },
+  journey: { pos: V(-24, 17, 28), target: V(0, 5.2, 0) }
+};
+let tween = null;
+function goTo(name, instant) {
+  const s = SHOTS[name];
+  const narrow = innerWidth / innerHeight < 0.9;
+  const k = narrow ? 1.55 : 1;
+  const pos = s.target.clone().add(s.pos.clone().sub(s.target).multiplyScalar(k));
+  if (instant || reduce) { camera.position.copy(pos); controls.target.copy(s.target); tween = null; return; }
+  tween = { p0: camera.position.clone(), t0: controls.target.clone(), p1: pos, t1: s.target.clone(), start: performance.now(), dur: 1800 };
+}
+const easeInOut = k => k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+
+// ---------- panel ----------
+const chapterEl = document.getElementById('chapter');
+const bar = document.getElementById('bar');
+let current = 'overview', chapterStart = 0;
+function renderChapter(name) {
+  const c = CHAPTERS[name];
+  const facts = c.facts.map(([a, b]) => a === 'people' ? `<li><b id="peopleCount">0</b> people</li>` : `<li><b>${a}</b>${b ? ' ' + b : ''}</li>`).join('');
+  chapterEl.innerHTML = `<span class="kicker" style="--k:${c.color}"><i></i>${c.kicker}</span><h2>${c.title}</h2><p>${c.body}</p><ul class="facts">${facts}</ul>`;
+}
+function setChapter(name, fromTour) {
+  current = name;
+  document.body.dataset.ch = name;
+  ORDER.forEach(n => document.getElementById('b-' + n).setAttribute('aria-pressed', String(n === name)));
+  renderChapter(name);
+  goTo(name);
+  chapterStart = clock;
+  if (name === 'teams' || name === 'overview') hireFrom = clock;
+  if (!fromTour) tourT = 0;
+}
+document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => { setTour(false); setChapter(b.dataset.go); }));
+
+// tour
+let touring = !reduce, tourT = 0;
+const TOUR_DWELL = 10;
+const tourBtn = document.getElementById('tour');
+function setTour(on) { touring = on; tourT = 0; tourBtn.textContent = on ? 'Pause tour' : 'Play tour'; bar.style.width = '0'; }
+tourBtn.addEventListener('click', () => setTour(!touring));
+setTour(touring);
+controls.addEventListener('start', () => { tween = null; if (touring) setTour(false); });
+
+// ---------- animate ----------
+let clock = 0, hireFrom = 0, last = performance.now();
+const tmp = V(0, 0, 0);
+const DOM_PATH = (() => {
+  const a = 8.9, b = 5.75;   // walk around the platform's edge, at floor level
+  const pts = [V(-a, 0, b), V(a, 0, b), V(a, 0, -b), V(-a, 0, -b)];
+  const lens = pts.map((p, i) => p.distanceTo(pts[(i + 1) % 4]));
+  const total = lens.reduce((s, l) => s + l, 0);
+  return u => {
+    let s = (((u % 1) + 1) % 1) * total;
+    for (let i = 0; i < 4; i++) {
+      if (s <= lens[i]) { const A = pts[i], B = pts[(i + 1) % 4]; return { p: A.clone().lerp(B, s / lens[i]), dir: B.clone().sub(A) }; }
+      s -= lens[i];
+    }
+    return { p: pts[0].clone(), dir: V(1, 0, 0) };
+  };
+})();
+
+function frame(now) {
+  const dt = Math.min((now - last) / 1000, 0.05); last = now;
+  clock += reduce ? dt * 0.35 : dt;
+  const t = clock;
+
+  // camera tween
+  if (tween) {
+    const k = Math.min(1, (now - tween.start) / tween.dur), e = easeInOut(k);
+    camera.position.lerpVectors(tween.p0, tween.p1, e);
+    controls.target.lerpVectors(tween.t0, tween.t1, e);
+    if (k >= 1) tween = null;
+  }
+
+  // tour
+  if (touring) {
+    tourT += dt;
+    bar.style.width = Math.min(100, (tourT / TOUR_DWELL) * 100) + '%';
+    if (tourT >= TOUR_DWELL) { tourT = 0; setChapter(ORDER[(ORDER.indexOf(current) + 1) % ORDER.length], true); }
+  }
+
+  // events flow along each team's topic
+  events.forEach((ev, i) => {
+    const u = (ev.off + t * ev.speed) % 1;
+    const x = -7.4 + u * 15.4;
+    const fade = Math.min(1, (x + 7.4) / 0.4) * Math.min(1, Math.max(0, (7.7 - x) / 0.4));
+    const through = ev.li >= 2 && x > FX;
+    dummy.position.set(x, LT + 0.13 + (through ? 0.03 : 0), ev.z);
+    dummy.rotation.set(0, through ? 0 : x * 0.0, 0);
+    dummy.scale.setScalar(Math.max(0.0001, fade));
+    dummy.updateMatrix();
+    if (through) { ballMesh.setMatrixAt(i, dummy.matrix); cubeMesh.setMatrixAt(i, ZERO); }
+    else { cubeMesh.setMatrixAt(i, dummy.matrix); ballMesh.setMatrixAt(i, ZERO); }
+  });
+  cubeMesh.instanceMatrix.needsUpdate = true; ballMesh.instanceMatrix.needsUpdate = true;
+  flinkRing.rotation.z = t * 0.8;
+  flinkRing.material.emissiveIntensity = 0.25 + Math.sin(t * 3) * 0.12;
+
+  // platform services rise
+  rings.forEach(r => {
+    const u = (r.off + t * 0.22) % 1;
+    r.r.position.set(r.x, PT + 0.05 + u * 1.4, r.z);
+    r.r.scale.setScalar(0.6 + u * 0.7);
+    r.r.material.opacity = Math.sin(u * Math.PI) * 0.9;
+  });
+
+  // enabling team glides back and forth over the left half
+  const ex = -3.6 + Math.sin(t * 0.32) * 3.1;
+  enabling.position.x = ex;
+
+  // hiring: people pop in one by one when Teams or Overview starts
+  let hired = 0;
+  people.forEach(p => {
+    const k = Math.min(1, Math.max(0, (t - hireFrom - 0.4 - p.order * 0.07) / 0.35));
+    const s = k <= 0 ? 0.0001 : 1 + Math.sin(k * Math.PI) * 0.35;
+    p.g.scale.setScalar(k >= 1 ? 1 : s * k);
+    if (k > 0.5) hired++;
+    // facilitated: hop when the enabling gantry passes over
+    let hop = 0;
+    if (p.team === 'stream') {
+      const d = Math.abs(p.g.position.x - ex);
+      if (d < 0.6) hop = Math.abs(Math.sin(t * 9 + p.phase)) * 0.18 * (1 - d / 0.6);
+    }
+    if (p.team === 'subsystem') p.g.rotation.y = t * 0.6 + p.phase;
+    p.g.position.y = p.g.userData.baseY + hop;
+  });
+  const pc = document.getElementById('peopleCount');
+  if (pc && pc.textContent !== String(hired)) pc.textContent = hired;
+
+  // agents bounce inside their boundaries
+  agents.forEach(a => {
+    a.orb.position.addScaledVector(a.vel, dt * (reduce ? 0.4 : 1));
+    ['x', 'y', 'z'].forEach(ax => {
+      if (Math.abs(a.orb.position[ax]) > a.half[ax]) {
+        a.orb.position[ax] = Math.sign(a.orb.position[ax]) * a.half[ax];
+        a.vel[ax] *= -1; a.flash = 1;
+      }
+    });
+    a.flash = Math.max(0, a.flash - dt * 3);
+    a.fill.material.opacity = 0.08 + a.flash * 0.22;
+    a.orb.rotation.x += dt * 2; a.orb.rotation.y += dt * 1.5;
+  });
+
+  // Dom walks the floor
+  const walk = DOM_PATH(t * 0.012);
+  dom.position.copy(walk.p);
+  dom.position.y = Math.abs(Math.sin(t * 7)) * 0.06;
+  dom.rotation.y = Math.atan2(walk.dir.x, walk.dir.z);
+
+  // career pulses climb the helix
+  for (let i = 0; i < pulseN; i++) {
+    const u = (i / pulseN + t * 0.018) % 1;
+    dummy.position.copy(helixPoint(u));
+    dummy.rotation.set(0, 0, 0);
+    dummy.scale.setScalar(0.6 + u * 0.8);
+    dummy.updateMatrix();
+    pulses.setMatrixAt(i, dummy.matrix);
+  }
+  pulses.instanceMatrix.needsUpdate = true;
+  careerMarks.forEach((m, i) => { m.rotation.y = t * 0.5 + i; m.position.y = helixPoint(yearToU(CAREER[i].y)).y + Math.sin(t * 1.4 + i) * 0.05; });
+
+  // slow ambient drift when the camera is at rest
+  if (!tween && touring && !reduce) {
+    tmp.copy(camera.position).sub(controls.target).applyAxisAngle(V(0, 1, 0), dt * 0.035);
+    camera.position.copy(controls.target).add(tmp);
+  }
+
+  controls.update();
+  renderer.render(scene, camera);
+  labelRenderer.render(scene, camera);
+  requestAnimationFrame(frame);
+}
+
+function resize() {
+  const w = innerWidth, h = innerHeight;
+  renderer.setSize(w, h, false);
+  labelRenderer.setSize(w, h);
+  camera.aspect = w / h;
+  // on phones the panel covers the bottom, so lift the scene into the space above it
+  if (w < 640) camera.setViewOffset(w, h, 0, h * 0.17, w, h); else camera.clearViewOffset();
+  camera.updateProjectionMatrix();
+}
+addEventListener('resize', () => { resize(); if (!tween) goTo(current, true); });
+resize();
+setChapter('overview');
+goTo('overview', true);
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
