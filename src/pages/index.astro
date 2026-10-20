@@ -67,6 +67,7 @@ const explore = [
 	{ href: '/experience/', kicker: '~/experience', title: 'Timeline & stack', desc: 'Full role history and technology depth' },
 	{ href: '/speaking/', kicker: '~/speaking', title: 'Talks & podcasts', desc: 'Conference talks and guest appearances' },
 	{ href: '/community/', kicker: '~/community', title: 'Organizing', desc: 'Meetups and practitioner communities' },
+	{ href: '/topologies/', kicker: '~/topologies', title: 'My work in 3D', desc: 'An interactive Team Topologies board' },
 ];
 
 const languages = [
@@ -110,6 +111,7 @@ const languages = [
 				<span aria-hidden="true">&middot;</span>
 				<a href={GITHUB_URL}>GitHub</a>
 			</div>
+			<a class="cta-3d" href="/topologies/">Explore my work in 3D &rarr;</a>
 		</div>
 
 		{upcomingEvents.length > 0 && (
@@ -253,6 +255,14 @@ const languages = [
 	}
 	.explore-grid {
 		margin: 1rem 0 0;
+	}
+	.cta-3d {
+		font-family: var(--font-mono);
+		font-size: 0.85rem;
+		color: var(--accent);
+	}
+	.cta-3d:hover {
+		color: var(--fg);
 	}
 	.next-up {
 		margin: 1.5rem 0;

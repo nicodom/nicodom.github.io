@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+	title="My work in 3D | Domenico Fioravanti"
+	description="Domenico Fioravanti's work as an interactive 3D board: Team Topologies, event-driven Data Mesh, bounded AI agents and a career from Rome to Dublin."
+>
+	<h1>My work in 3D</h1>
+	<p class="intro">
+		Teams, event streams, AI agents and a career from Rome to Dublin, drawn as a Team Topologies
+		board. Drag to orbit, scroll to zoom, or let the tour play.
+	</p>
+	<div class="scene-frame">
+		<iframe
+			src="/topologies/scene.html"
+			title="Interactive 3D Team Topologies board of Domenico Fioravanti's work"
+		></iframe>
+	</div>
+	<p class="fullscreen">
+		<a href="/topologies/scene.html">Open full screen &nearr;</a>
+	</p>
+</BaseLayout>
+
+<style>
+	.intro {
+		color: var(--muted);
+	}
+	/* Break out of the 760px text column so the scene has room. */
+	.scene-frame {
+		position: relative;
+		left: 50%;
+		translate: -50% 0;
+		width: min(1200px, 100vw - 3rem);
+		height: clamp(420px, 75svh, 760px);
+		margin: 1.5rem 0 0.75rem;
+		border: 1px solid var(--line);
+	}
+	.scene-frame iframe {
+		display: block;
+		width: 100%;
+		height: 100%;
+		border: 0;
+	}
+	.fullscreen {
+		font-family: var(--font-mono);
+		font-size: 0.85rem;
+		text-align: right;
+	}
+</style>
