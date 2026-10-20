@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import { Picture } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { GITHUB_URL, LINKEDIN_URL } from '../lib/contact';
+import { LINKEDIN_URL } from '../lib/contact';
 import domenicoPhoto from '../assets/domenico.jpg';
 import topologiesPreview from '../assets/topologies.png';
 
@@ -107,11 +107,7 @@ const languages = [
 			</div>
 		</div>
 		<div class="cta-row">
-			<div class="social-inline">
-				<a href={LINKEDIN_URL}>LinkedIn</a>
-				<span aria-hidden="true">&middot;</span>
-				<a href={GITHUB_URL}>GitHub</a>
-			</div>
+			<a class="btn-linkedin" href={LINKEDIN_URL}>Connect on LinkedIn &rarr;</a>
 		</div>
 
 		{upcomingEvents.length > 0 && (

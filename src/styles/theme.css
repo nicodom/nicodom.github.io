@@ -223,7 +223,8 @@ main {
 }
 
 .footer-links a {
-	color: var(--muted);
+	color: var(--accent);
+	font-weight: 600;
 }
 
 /* ---------- shared section pieces ---------- */
@@ -354,18 +355,27 @@ main {
 	margin: 1.25rem 0;
 }
 
-.social-inline {
-	display: flex;
-	gap: 0.9rem;
-	align-items: center;
-	font-size: 0.85rem;
-	color: var(--muted);
+.btn-linkedin {
+	display: inline-block;
+	padding: 0.65rem 1.1rem;
 	font-family: var(--font-mono);
-	flex-wrap: wrap;
+	font-size: 0.9rem;
+	font-weight: 600;
+	color: var(--accent-contrast);
+	background: var(--accent);
+	border: 1px solid var(--accent);
+	border-radius: var(--radius);
+	text-decoration: none;
 }
 
-.social-inline a {
-	color: var(--muted);
+.btn-linkedin:hover {
+	color: var(--accent);
+	background: transparent;
+}
+
+.btn-linkedin:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 3px;
 }
 
 .achievements {

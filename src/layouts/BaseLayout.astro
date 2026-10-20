@@ -1,6 +1,6 @@
 ---
 import '../styles/theme.css';
-import { GITHUB_URL, LINKEDIN_URL } from '../lib/contact';
+import { LINKEDIN_URL } from '../lib/contact';
 
 interface Props {
 	title: string;
@@ -96,8 +96,7 @@ const socialImageURL = new URL(image, Astro.site);
 		<footer class="site-footer">
 			<p class="footer-copy">&copy; {new Date().getFullYear()} Domenico Fioravanti</p>
 			<div class="footer-links">
-				<a href={LINKEDIN_URL}>LinkedIn</a>
-				<a href={GITHUB_URL}>GitHub</a>
+				<a href={LINKEDIN_URL}>LinkedIn &nearr;</a>
 			</div>
 		</footer>
 		<script is:inline>
