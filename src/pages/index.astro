@@ -92,22 +92,22 @@ const languages = [
 					maximise flow, resilience, and business outcomes.<span class="cursor" aria-hidden="true"></span>
 				</p>
 			</div>
-			<div class="hero-photo">
-				<Picture
-					src={domenicoPhoto}
-					alt="Domenico Fioravanti"
-					formats={['avif', 'webp']}
-					fallbackFormat="jpg"
-					width={120}
-					height={120}
-					densities={[1, 2]}
-					loading="eager"
-					fetchpriority="high"
-				/>
+			<div class="hero-profile">
+				<div class="hero-photo">
+					<Picture
+						src={domenicoPhoto}
+						alt="Domenico Fioravanti"
+						formats={['avif', 'webp']}
+						fallbackFormat="jpg"
+						width={160}
+						height={160}
+						densities={[1, 2]}
+						loading="eager"
+						fetchpriority="high"
+					/>
+				</div>
+				<a class="btn-linkedin hero-linkedin" href={LINKEDIN_URL}>Connect on LinkedIn</a>
 			</div>
-		</div>
-		<div class="cta-row">
-			<a class="btn-linkedin" href={LINKEDIN_URL}>Connect on LinkedIn &rarr;</a>
 		</div>
 
 		{upcomingEvents.length > 0 && (
@@ -251,12 +251,27 @@ const languages = [
 		flex: 1;
 		min-width: 240px;
 	}
-	.hero-photo {
-		width: 120px;
-		height: 120px;
+	/* Photo and LinkedIn button form one card: the button sits flush under the photo at the same width. */
+	.hero-profile {
+		width: 160px;
 		flex-shrink: 0;
+		display: flex;
+		flex-direction: column;
+	}
+	.hero-photo {
+		width: 160px;
+		height: 160px;
 		border: 1px solid var(--line);
+		border-bottom: 0;
 		background: var(--bg-panel);
+	}
+	.hero-linkedin {
+		display: block;
+		padding: 0.55rem 0.25rem;
+		font-size: 0.75rem;
+		text-align: center;
+		white-space: nowrap;
+		border-radius: 0;
 	}
 	.hero-photo img {
 		display: block;
