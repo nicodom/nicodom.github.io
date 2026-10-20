@@ -4,6 +4,7 @@ import { Picture } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { GITHUB_URL, LINKEDIN_URL } from '../lib/contact';
 import domenicoPhoto from '../assets/domenico.jpg';
+import topologiesPreview from '../assets/topologies.png';
 
 const now = new Date();
 
@@ -111,7 +112,6 @@ const languages = [
 				<span aria-hidden="true">&middot;</span>
 				<a href={GITHUB_URL}>GitHub</a>
 			</div>
-			<a class="cta-3d" href="/topologies/">Explore my work in 3D &rarr;</a>
 		</div>
 
 		{upcomingEvents.length > 0 && (
@@ -139,6 +139,21 @@ const languages = [
 				</div>
 			))}
 		</div>
+
+		<a class="preview-3d" href="/topologies/">
+			<Picture
+				src={topologiesPreview}
+				alt="3D Team Topologies board: stream-aligned teams on a platform, wrapped by a career timeline from 2000 to 2023"
+				formats={['avif', 'webp']}
+				fallbackFormat="jpg"
+				widths={[480, 760, 1200, 1520]}
+				sizes="(min-width: 808px) 760px, calc(100vw - 3rem)"
+			/>
+			<span class="preview-3d-caption">
+				<span class="preview-3d-kicker">interactive</span>
+				<span class="preview-3d-title">Explore my work in 3D &rarr;</span>
+			</span>
+		</a>
 	</section>
 
 	<section>
@@ -256,13 +271,56 @@ const languages = [
 	.explore-grid {
 		margin: 1rem 0 0;
 	}
-	.cta-3d {
+	.preview-3d {
+		position: relative;
+		display: block;
+		margin: 1.5rem 0;
+		border: 1px solid var(--line);
+		overflow: hidden;
+		color: var(--fg);
+		text-decoration: none;
+	}
+	.preview-3d img {
+		display: block;
+		width: 100%;
+		height: auto;
+		transition: transform 400ms ease;
+	}
+	.preview-3d:hover img,
+	.preview-3d:focus-visible img {
+		transform: scale(1.03);
+	}
+	.preview-3d-caption {
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
+		padding: 0.75rem 1rem;
+		background: var(--bg-panel);
+		border-top: 1px solid var(--accent);
+		border-right: 1px solid var(--accent);
+	}
+	.preview-3d-kicker {
 		font-family: var(--font-mono);
-		font-size: 0.85rem;
+		font-size: 0.7rem;
+		color: var(--muted);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+	}
+	.preview-3d-title {
+		font-family: var(--font-display);
+		font-weight: 600;
+		font-size: 1.05rem;
+	}
+	.preview-3d:hover .preview-3d-title {
 		color: var(--accent);
 	}
-	.cta-3d:hover {
-		color: var(--fg);
+	@media (prefers-reduced-motion: reduce) {
+		.preview-3d img {
+			transition: none;
+		}
 	}
 	.next-up {
 		margin: 1.5rem 0;

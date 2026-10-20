@@ -1,9 +1,14 @@
 ---
+import { getImage } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import topologiesPreview from '../../assets/topologies.png';
+
+const socialImage = await getImage({ src: topologiesPreview, format: 'jpg', width: 1200 });
 ---
 
 <BaseLayout
 	title="My work in 3D | Domenico Fioravanti"
+	image={socialImage.src}
 	description="Domenico Fioravanti's work as an interactive 3D board: Team Topologies, event-driven Data Mesh, bounded AI agents and a career from Rome to Dublin."
 >
 	<h1>My work in 3D</h1>
