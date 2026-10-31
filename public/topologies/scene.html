@@ -199,9 +199,9 @@ const CHAPTERS = {
   },
   journey: {
     color: 'var(--ink)', kicker: 'Rome to Dublin',
-    title: 'Nine roles, one thread',
-    body: 'The spiral climbs from a research fellowship at La Sapienza in 2000 to running engineering in Dublin. Along the way he co-owned a company, went from architect to director, and organised seven Kafka, Flink and CTO Craft meetups.',
-    facts: [['9', 'roles'], ['7', 'talks since 2022'], ['7', 'meetups organised']]
+    title: 'Ten roles, one thread',
+    body: 'The spiral climbs from a research fellowship at La Sapienza in 2000, through running engineering in Dublin, to independent advisory work on org design and AI adoption in 2026. Along the way he co-owned a company, went from architect to director, and organised seven Kafka, Flink and CTO Craft meetups.',
+    facts: [['10', 'roles'], ['7', 'talks since 2022'], ['7', 'meetups organised']]
   }
 };
 const ORDER = ['overview', 'teams', 'streams', 'agents', 'journey'];
@@ -214,7 +214,8 @@ const CAREER = [
   { y: 2018.8, t: 'Director of Engineering', o: "Hudson's Bay Company" },
   { y: 2020.0, t: 'Senior Eng Manager', o: 'FabFitFun' },
   { y: 2020.7, t: 'Director of Engineering', o: 'Thérapie Clinic' },
-  { y: 2023.1, t: 'Senior Director of Engineering', o: 'Rue Gilt Groupe, Dublin' }
+  { y: 2023.1, t: 'Senior Director of Engineering', o: 'Rue Gilt Groupe, Dublin' },
+  { y: 2026.75, t: 'Engineering Leadership & AI Advisor', o: 'Independent, Dublin' }
 ];
 
 // ---------- renderer ----------
@@ -392,7 +393,8 @@ CAREER.forEach((c, i) => {
   disc.castShadow = false;
   careerMarks.push(disc);
   const below = i === 3 || i === 6;   // keep neighbouring years from overlapping
-  label(`<b>${Math.floor(c.y)}</b>${c.t}<br>${c.o}`, 'journey', V(p.x, p.y + (below ? -0.75 : 0.6), p.z), '', last ? C.dom : C.ink);
+  // the latest stop sits right above 2016 on the spiral, so lift its label clear of it
+  label(`<b>${Math.floor(c.y)}</b>${c.t}<br>${c.o}`, 'journey', V(p.x, p.y + (below ? -0.75 : last ? 1.3 : 0.6), p.z), '', last ? C.dom : C.ink);
 });
 const pulseN = 36;
 const pulses = new THREE.InstancedMesh(new THREE.SphereGeometry(0.09, 10, 8), mat('#ffffff', { emissive: '#ffffff', emissiveIntensity: 0.4 }), pulseN);

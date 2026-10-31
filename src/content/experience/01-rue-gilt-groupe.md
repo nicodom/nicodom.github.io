@@ -3,13 +3,14 @@ company: Rue Gilt Groupe
 role: Senior Director of Engineering
 location: Dublin, Ireland
 startDate: 2023-02-01
-summary: Built Rue Gilt Groupe's Dublin engineering office from the ground up; now leading 20+ engineers across Storefront, Backoffice, and Platform teams spanning Europe, the US, and South America.
+endDate: 2026-09-01
+summary: Built Rue Gilt Groupe's Dublin engineering office from the ground up, leading 20+ engineers across Storefront, Backoffice, and Platform teams spanning Europe, the US, and South America.
 techStack: [AWS, Python, Django, React, "Aurora PostgreSQL", DynamoDB, GraphQL, Serverless, "Kafka + Flink + Tableflow/Confluent", "CDC (Debezium)", Iceberg, Snowflake, "Claude Code"]
 ---
 
 Joined as Director of Engineering to build Rue Gilt Groupe's Dublin office from the ground up. Working alongside the General Manager, led the foundational setup of the office: establishing hiring processes, shaping the engineering culture, and forming the first cross-functional teams. Subsequently promoted to Senior Director of Engineering.
 
-Today manage 20+ engineers distributed across Europe, the US, and South America, across three teams: two focused on the e-commerce Storefront (one Dublin-based, one distributed in the US) and one Dublin-based team owning the Backoffice Storemanager, currently delivering a major pricing initiative. Also pioneered and built a new Platform team, shaping its strategic direction from inception. A new distributed team in South America is currently being formed around Storefront Data Science and Marketing.
+Managed 20+ engineers distributed across Europe, the US, and South America, across three teams: two focused on the e-commerce Storefront (one Dublin-based, one distributed in the US) and one Dublin-based team owning the Backoffice Storemanager, which delivered a major pricing initiative. Also pioneered and built a new Platform team, shaping its strategic direction from inception, and started forming a new distributed team in South America around Storefront Data Science and Marketing.
 
 **Key deliverables:**
 - Athena, an AI-powered platform for real-time pricing and inventory optimization
@@ -21,6 +22,6 @@ Today manage 20+ engineers distributed across Europe, the US, and South America,
 - Drove org-wide adoption of AI-assisted development (Claude Code), shifting engineers from single-task to multi-task parallel workflows
 - Identified and corrected an early agentic-AI adoption misstep (metric-driven tool usage, top-down process enforcement) that was increasing tech debt and siloing, and realigned around Team Topologies principles
 
-Beyond delivery, pioneering and leading the strategic decomposition of the data monolith into an event-driven Data Mesh — a 3-year architectural transformation using Kafka + Flink + Tableflow (Iceberg), drastically reducing data latency and enabling real-time decision-making across the platform.
+Beyond delivery, pioneered and led the strategic decomposition of the data monolith into an event-driven Data Mesh — a 3-year architectural transformation using Kafka + Flink + Tableflow (Iceberg), drastically reducing data latency and enabling real-time decision-making across the platform.
 
 Third-party integrations: Eppo, Algolia, Braintree, Iterable, Seel, Tealium, Datadog, Castle, hCaptcha, Okta/Auth0, Patchworks.
