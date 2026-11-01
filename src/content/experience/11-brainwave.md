@@ -4,6 +4,7 @@ role: Co-Founder – Java Developer
 startDate: 2002-01-01
 endDate: 2003-12-01
 summary: Co-founded a software development company building custom Java applications for clients, delivering Java/J2EE n-tier web applications end to end.
+earlier: true
 ---
 
 - Company co-founder

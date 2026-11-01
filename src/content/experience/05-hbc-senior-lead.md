@@ -5,6 +5,7 @@ startDate: 2018-06-01
 endDate: 2018-11-01
 summary: Led a team owning Cart, Checkout, and Order Submission across HBC's multi-banner sites, moving cart functionality off a deprecated e-commerce monolith using Event Sourcing and CQRS.
 techStack: [AWS, K8s, Kafka, Scala, Oracle, MongoDB]
+earlier: true
 ---
 
 Led a team of 5 software engineers, 1 product manager, 1 PMO, and 1 QA, owning the following sections of HBC's multi-banner environment (saksfifthavenue.com, saksoff5th.com, lordandtaylor.com, thebay.com/labaie.com): Mini-Cart, Cart, Checkout, and Order Submission.

@@ -26,6 +26,8 @@ const experience = defineCollection({
     endDate: z.date().optional(),
     summary: z.string().optional(),
     techStack: z.array(z.string()).optional(),
+    // Listed under "Earlier career" on the Experience page instead of as a timeline card.
+    earlier: z.boolean().optional(),
   }),
 });
 

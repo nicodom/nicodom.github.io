@@ -1,4 +1,5 @@
 ---
+import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const stack: [string, string][] = [
@@ -24,61 +25,26 @@ const stackFull: [string, string] = [
 // width row's own top edge.
 const stackLastRowStart = stack.length - (stack.length % 2 === 0 ? 2 : 1);
 
-const roles = [
-	{
-		title: 'Engineering Leadership & AI Enablement Advisor',
-		current: true,
-		company: 'Independent',
-		location: 'Dublin, Ireland',
-		when: '2026-10 → present',
-		body: 'Open to selective fractional CTO and advisory work: engineering org design (Team Topologies), event-driven and data-platform architecture, and governing the adoption of AI-assisted development and AI agents. Building an agentic AI assistant over real-time event streams (Kafka, Flink, Iceberg) with RAG, MCP-based tool access, evaluation, AI observability and guardrails.',
-		tags: ['Team Topologies', 'Kafka+Flink', 'Iceberg', 'RAG', 'MCP'],
-	},
-	{
-		title: 'Senior Director of Engineering',
-		current: false,
-		company: 'Rue Gilt Groupe',
-		location: 'Dublin, Ireland',
-		when: '2023-02 → 2026-09',
-		body: "Built Rue Gilt Groupe's Dublin office from zero. Managed 20+ engineers across Europe, the US, and South America, leading a 3-year transformation from a data monolith to an event-driven Data Mesh (Kafka + Flink + Tableflow). Also drove org-wide adoption of AI-assisted development (Claude Code), shifting engineers to multi-task parallel workflows, and corrected an early agentic-AI adoption misstep by realigning around Team Topologies principles.",
-		tags: ['AWS', 'Kafka+Flink', 'Django', 'React', 'Snowflake', 'Claude Code'],
-	},
-	{
-		title: 'Director of Engineering',
-		current: false,
-		company: 'Thérapie Clinic',
-		location: 'Dublin, Ireland',
-		when: '2020-09 → 2023-01',
-		body: 'Hired by the CEO to build an internal tech organisation from zero. Grew it to 7 teams and 45 people in two years, spanning call centre, e-commerce, ERP, and data platforms.',
-		tags: ['K8s', 'Kafka Streams', 'Kotlin', 'React Native'],
-	},
-	{
-		title: 'Senior Engineering Manager',
-		current: false,
-		company: 'FabFitFun',
-		location: 'Dublin, Ireland',
-		when: '2020-01 → 2020-07',
-		body: 'Led two teams through the "strangler pattern" migration from a monolith to event-driven microservices, replacing an external API dependency in-house.',
-		tags: [],
-	},
-	{
-		title: 'Director of Engineering',
-		current: false,
-		company: "Hudson's Bay Company",
-		location: '',
-		when: '2018-11 → 2020-01',
-		body: 'Led 4 engineering teams through a monolith-to-microservices migration; planned resourcing for 30+ engineers during the move to Salesforce Commerce Cloud.',
-		tags: [],
-	},
-];
+// Every role comes from src/content/experience/: frontmatter feeds the card,
+// the markdown body goes in the expandable "more" section.
+const jobs = await Promise.all(
+	(await getCollection('experience'))
+		.sort((a, b) => b.data.startDate.valueOf() - a.data.startDate.valueOf())
+		.map(async (job) => ({ ...job, Content: (await render(job)).Content, hasBody: Boolean(job.body?.trim()) })),
+);
 
-const earlier = [
-	{ role: "Lead / Senior Lead Software Engineer — Gilt.com & Hudson's Bay Company", when: '2016-2018' },
-	{ role: 'Senior Software Developer — BIONIC Marketing Technology', when: '2016' },
-	{ role: 'Head of Operations & Senior J2EE Architect — Genius Bytes Software Solutions', when: '2011-2015' },
-	{ role: 'Co-Owner, Project Manager & Architect — Digital Solutions S.r.l. (custom Java software)', when: '2004-2011' },
-	{ role: 'Co-Founder — Brainwave S.r.l. (custom Java software)  /  Research Fellow — La Sapienza', when: '2000-2003' },
-];
+// Content dates are parsed as UTC midnight, so format in UTC to avoid off-by-one months.
+const month = (date: Date) => `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}`;
+const years = (start: Date, end?: Date) => {
+	const from = start.getUTCFullYear();
+	const to = end ? end.getUTCFullYear() : 'present';
+	return from === to ? String(from) : `${from}-${to}`;
+};
+
+const roles = jobs.filter((job) => !job.data.earlier);
+const earlier = jobs.filter((job) => job.data.earlier);
+const earlierFrom = Math.min(...earlier.map((job) => job.data.startDate.getUTCFullYear()));
+const earlierTo = Math.max(...earlier.map((job) => (job.data.endDate ?? job.data.startDate).getUTCFullYear()));
 ---
 
 <BaseLayout title="Experience | Domenico Fioravanti" description="Professional experience and technology skills.">
@@ -107,46 +73,127 @@ const earlier = [
 	<section>
 		<span class="section-label bracket-label">git log --roles</span>
 		<div class="timeline">
-			{roles.map((role, i) => (
+			{roles.map(({ data, Content, hasBody }, i) => (
 				<>
 					<div class="timeline-marker">
-						<span class={`timeline-dot ${role.current ? 'timeline-dot--current' : ''}`}></span>
+						<span class={`timeline-dot ${data.endDate ? '' : 'timeline-dot--current'}`}></span>
 						{i < roles.length - 1 && <span class="timeline-line"></span>}
 					</div>
 					<div class="timeline-content">
 						<div class="timeline-heading">
-							<span class="timeline-title">{role.title}</span>
-							{role.current && <span class="head-badge">HEAD</span>}
+							<span class="timeline-title">{data.role}</span>
+							{!data.endDate && <span class="head-badge">HEAD</span>}
 						</div>
 						<p class="timeline-company">
-							{role.company}
-							{role.location && <> &middot; {role.location}</>}
+							{data.company}
+							{data.location && <> &middot; {data.location}</>}
 						</p>
-						<p class="timeline-when">{role.when}</p>
-						<p class="timeline-body">{role.body}</p>
-						{role.tags.length > 0 && (
+						<p class="timeline-when">
+							{month(data.startDate)} &rarr; {data.endDate ? month(data.endDate) : 'present'}
+						</p>
+						{data.summary && <p class="timeline-body">{data.summary}</p>}
+						{data.techStack && data.techStack.length > 0 && (
 							<div class="timeline-tags">
-								{role.tags.map((tag) => <span class="tag">{tag}</span>)}
+								{data.techStack.map((tag) => <span class="tag">{tag}</span>)}
 							</div>
+						)}
+						{hasBody && (
+							<details class="role-more">
+								<summary>more</summary>
+								<div class="role-more-body">
+									<Content />
+								</div>
+							</details>
 						)}
 					</div>
 				</>
 			))}
-			<div class="timeline-marker">
-				<span class="timeline-dot"></span>
-			</div>
-			<div class="timeline-content">
-				<p class="timeline-title" style="font-size:1.05rem;">Earlier career</p>
-				<p class="timeline-when">2000 → 2018</p>
-				<div class="earlier-list">
-					{earlier.map((item) => (
-						<div class="earlier-row">
-							<span>{item.role}</span>
-							<span class="when">{item.when}</span>
+			{earlier.length > 0 && (
+				<>
+					<div class="timeline-marker">
+						<span class="timeline-dot"></span>
+					</div>
+					<div class="timeline-content">
+						<p class="timeline-title" style="font-size:1.05rem;">Earlier career</p>
+						<p class="timeline-when">{earlierFrom} &rarr; {earlierTo}</p>
+						<div class="earlier-list">
+							{earlier.map(({ data, Content, hasBody }) => (
+								<details class="earlier-row">
+									<summary>
+										<span>{data.role} &mdash; {data.company}</span>
+										<span class="when">{years(data.startDate, data.endDate)}</span>
+									</summary>
+									<div class="role-more-body">
+										{data.summary && <p>{data.summary}</p>}
+										{hasBody && <Content />}
+									</div>
+								</details>
+							))}
 						</div>
-					))}
-				</div>
-			</div>
+					</div>
+				</>
+			)}
 		</div>
 	</section>
 </BaseLayout>
+
+<style>
+	.role-more {
+		margin-top: 0.85rem;
+	}
+	.role-more > summary,
+	.earlier-row > summary {
+		cursor: pointer;
+		font-family: var(--font-mono);
+		font-size: 0.75rem;
+		color: var(--muted);
+	}
+	.role-more > summary:hover,
+	.earlier-row > summary:hover {
+		color: var(--accent);
+	}
+	/* theme.css lays .earlier-row out as a flex row; as a <details> the summary carries that layout instead. */
+	.earlier-row {
+		display: block;
+	}
+	.earlier-row > summary {
+		display: flex;
+		justify-content: space-between;
+		gap: 1.5rem;
+		font-family: inherit;
+		font-size: inherit;
+		color: inherit;
+	}
+	.earlier-row > summary::-webkit-details-marker {
+		display: none;
+	}
+	.earlier-row > summary::before {
+		content: '+';
+		font-family: var(--font-mono);
+		color: var(--muted);
+		margin-right: -1rem;
+	}
+	.earlier-row[open] > summary::before {
+		content: '−';
+	}
+	.earlier-row > summary > span:first-of-type {
+		flex: 1;
+	}
+	.role-more-body {
+		font-size: 0.85rem;
+		line-height: 1.65;
+		max-width: 42rem;
+		margin-top: 0.6rem;
+		color: var(--fg);
+	}
+	.role-more-body :global(p),
+	.role-more-body :global(ul) {
+		margin: 0 0 0.6rem;
+	}
+	.role-more-body :global(ul) {
+		padding-left: 1.1rem;
+	}
+	.role-more-body :global(li + li) {
+		margin-top: 0.25rem;
+	}
+</style>

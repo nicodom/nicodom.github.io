@@ -4,6 +4,7 @@ role: Researcher Fellow
 startDate: 2000-12-01
 endDate: 2001-12-01
 summary: Designed and built IT research projects, including a system for monitoring urban mobility.
+earlier: true
 ---
 
 - Designed and built IT research projects, including "Architecture of a system for monitoring urban mobility including the subsystem of multi-modal trip analysis"

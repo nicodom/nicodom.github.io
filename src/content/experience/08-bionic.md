@@ -5,6 +5,7 @@ location: Dublin, Ireland
 startDate: 2016-01-01
 endDate: 2016-09-01
 summary: Back-end development, third-party API integrations, and a Java 8 rewrite of a core legacy component.
+earlier: true
 ---
 
 Worked in the back-end development team: new feature implementation, technology scouting, bug fixing/hot fixes, code review, and technical interviews.
