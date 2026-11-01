@@ -5,6 +5,7 @@ location: Rome (Italy) / Bochum (Germany)
 startDate: 2011-08-01
 endDate: 2015-12-01
 summary: Ran the Italian office's operations and support function while working as senior full-stack architect on the company's core product and BPM engine.
+earlier: true
 ---
 
 - Head of Operation and Support (Italian office)

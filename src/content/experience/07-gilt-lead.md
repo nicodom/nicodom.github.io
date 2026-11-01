@@ -6,6 +6,7 @@ startDate: 2016-09-01
 endDate: 2017-12-01
 summary: Led a team of 4 engineers and 1 PM, transforming Gilt City into a first-class part of the Gilt platform.
 techStack: [AWS, Microservices, "Step Functions", Lambda, "Elastic Search", Scala, Ruby, PostgreSQL]
+earlier: true
 ---
 
 Worked on Gilt.com (owned by Hudson's Bay Company), leading a team of 4 software engineers and 1 product manager, transforming Gilt City into a first-class citizen of the Gilt platform.
