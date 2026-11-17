@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # The site is static: "upcoming" vs past talks and events is decided at build
+  # time, so rebuild daily to move events into the past once their date passes.
+  schedule:
+    - cron: '0 5 * * *'
 
 permissions:
   contents: read
